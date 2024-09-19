@@ -46,4 +46,8 @@ public class Store extends Timestamped {
         this.closeTime = storeRequestDto.getCloseTime();
         this.minPrice = storeRequestDto.getMinPrice();
     }
+
+    public void delete() {
+        this.status = true;
+    }
 }
