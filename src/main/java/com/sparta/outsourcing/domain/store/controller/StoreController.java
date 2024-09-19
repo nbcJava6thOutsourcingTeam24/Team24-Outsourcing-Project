@@ -57,4 +57,15 @@ public class StoreController {
         List<StoreResponseDto> responseList = storeService.getStoreList();
         return new ResponseEntity<>(responseList, HttpStatus.OK);
     }
+
+    /**
+     * 가게를 조회합니다
+     * @param storeId 가게의 ID를 이용해 조회합니다
+     * @return
+     */
+    @GetMapping("/stores/{storeId}")
+    public ResponseEntity<StoreResponseDto> getStore(@PathVariable Long storeId)
+    {
+        return new ResponseEntity<>(storeService.getStore(), HttpStatus.OK);
+    }
 }

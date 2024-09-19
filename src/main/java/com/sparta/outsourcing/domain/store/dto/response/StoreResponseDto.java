@@ -22,8 +22,17 @@ public class StoreResponseDto {
         this.closeTime = closeTime;
         this.minPrice = minPrice;
     }
-
     public static StoreResponseDto from(Store store) {
+        return new StoreResponseDto(
+            store.getId(),
+            store.getName(),
+            store.getOpenTime(),
+            store.getCloseTime(),
+            store.getMinPrice()
+        );
+    }
+
+    public static StoreResponseDto fromWithMenu(Store store) {
         return new StoreResponseDto(
             store.getId(),
             store.getName(),
