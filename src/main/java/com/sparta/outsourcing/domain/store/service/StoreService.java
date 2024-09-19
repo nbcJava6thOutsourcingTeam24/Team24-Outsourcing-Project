@@ -58,4 +58,11 @@ public class StoreService {
            .map(StoreResponseDto::from)
            .collect(Collectors.toList());
     }
+
+    public StoreResponseDto getStore() {
+        Store store = storeRepository.findById(1L)
+           .orElseThrow(() -> new IllegalArgumentException("Store not found"));
+
+        return StoreResponseDto.fromWithMenu(store);
+    }
 }
