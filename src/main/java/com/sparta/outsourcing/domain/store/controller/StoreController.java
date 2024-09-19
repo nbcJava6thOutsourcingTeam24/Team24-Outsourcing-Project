@@ -8,6 +8,7 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -67,5 +68,17 @@ public class StoreController {
     public ResponseEntity<StoreResponseDto> getStore(@PathVariable Long storeId)
     {
         return new ResponseEntity<>(storeService.getStore(), HttpStatus.OK);
+    }
+
+    /**
+     * 가게를 삭제합니다, SOFT - DELETE로 구현을 진행하였습니다.
+     * @param storeId 가게의 ID를 이용하여 삭제합니다
+     * @return 삭제 완료 메세지를 출력합니다.
+     */
+    @DeleteMapping("/stores/{storeId}")
+    public ResponseEntity<String> deleteStore(@PathVariable Long storeId)
+    {
+        storeService.deleteStore(storeId);
+        return new ResponseEntity<>("가게 폐업처리가 완료되었습니다.", HttpStatus.OK);
     }
 }

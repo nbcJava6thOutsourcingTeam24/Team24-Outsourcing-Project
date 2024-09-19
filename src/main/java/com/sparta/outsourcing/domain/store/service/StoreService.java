@@ -55,14 +55,27 @@ public class StoreService {
     public List<StoreResponseDto> getStoreList() {
         List<Store> stores = storeRepository.findAll();
         return stores.stream()
-           .map(StoreResponseDto::from)
-           .collect(Collectors.toList());
+            .map(StoreResponseDto::from)
+            .collect(Collectors.toList());
     }
 
     public StoreResponseDto getStore() {
         Store store = storeRepository.findById(1L)
-           .orElseThrow(() -> new IllegalArgumentException("Store not found"));
+            .orElseThrow(() -> new IllegalArgumentException("Store not found"));
 
         return StoreResponseDto.fromWithMenu(store);
+    }
+
+    public void deleteStore(Long storeId) {
+//        User user = User.fromAuthUser(authUser);
+
+        Store store = storeRepository.findById(storeId)
+            .orElseThrow(() -> new IllegalArgumentException("Store not found"));
+
+//        if (user.getId().equals(store.getOwner().getId())) {
+//            throw new IllegalArgumentException("Only owner can delete store");
+//        }
+
+        store.delete();
     }
 }
