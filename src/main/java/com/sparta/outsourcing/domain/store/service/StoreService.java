@@ -3,8 +3,6 @@ package com.sparta.outsourcing.domain.store.service;
 import com.sparta.outsourcing.domain.store.dto.request.StoreRequestDto;
 import com.sparta.outsourcing.domain.store.entity.Store;
 import com.sparta.outsourcing.domain.store.repository.StoreRepository;
-import com.sparta.outsourcing.domain.user.entity.User;
-import com.sparta.outsourcing.domain.user.enums.UserRole;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,7 +18,8 @@ public class StoreService {
     public void createStore(StoreRequestDto storeRequestDto) {
 //        User user = User.fromAuthUser(authUser);
 
-//        User user = userRepository.findById(1L).orElseThrow(()->new IllegalArgumentException("User not found"));
+//        User user = userRepository.findById(1L)
+//            .orElseThrow(() -> new IllegalArgumentException("User not found"));
 
 //        if(user.getUserRole() != UserRole.OWNER)
 //        {
@@ -31,5 +30,17 @@ public class StoreService {
 //            .orElseThrow(() -> new IllegalArgumentException("Store not found"));
 
 //        storeRepository.save(new Store(storeRequestDto, user));
+    }
+
+    public void updateStore(Long storeId, StoreRequestDto storeRequestDto) {
+//        User user = User.fromAuthUser(authUser);
+
+        Store store = storeRepository.findById(storeId)
+            .orElseThrow(() -> new IllegalArgumentException("Store not found"));
+
+//        if (store.getOwner().getId() != user.getId()) {
+//            throw new IllegalArgumentException("Only owner can update store");
+//        }
+        store.update(storeRequestDto);
     }
 }
