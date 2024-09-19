@@ -30,7 +30,7 @@ public class StoreService {
 //            throw new IllegalArgumentException("Only owner can create store");
 //        }
 //
-//        List<Store> stores = storeRepository.findAllByOwnerId(user.getId());
+//        List<Store> stores = storeRepository.findAllByOwnerIdAndStatusFalse(1L);
 //        if(stores.size() >= 3)
 //        {
 //            throw new IllegalArgumentException("store size is too large");
