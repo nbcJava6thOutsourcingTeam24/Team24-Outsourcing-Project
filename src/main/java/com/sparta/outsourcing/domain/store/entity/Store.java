@@ -39,4 +39,11 @@ public class Store extends Timestamped {
         this.minPrice = storeRequestDto.getMinPrice();
         this.owner = user;
     }
+
+    public void update(StoreRequestDto storeRequestDto) {
+        this.name = storeRequestDto.getName();
+        this.openTime = storeRequestDto.getOpenTime();
+        this.closeTime = storeRequestDto.getCloseTime();
+        this.minPrice = storeRequestDto.getMinPrice();
+    }
 }

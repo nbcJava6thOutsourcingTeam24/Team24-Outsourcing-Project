@@ -5,7 +5,9 @@ import com.sparta.outsourcing.domain.store.service.StoreService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -21,5 +23,11 @@ public class StoreController {
     public ResponseEntity<String> createStore(@RequestBody StoreRequestDto storeRequestDto) {
         storeService.createStore(storeRequestDto);
         return new ResponseEntity<>("가게 생성이 완료되었습니다", HttpStatus.CREATED);
+    }
+
+    @PutMapping("/stores/{storeId}")
+    public ResponseEntity<String> updateStore(@PathVariable Long storeId, @RequestBody StoreRequestDto storeRequestDto) {
+        storeService.updateStore(storeId, storeRequestDto);
+        return new ResponseEntity<>("가게 정보가 수정되었습니다", HttpStatus.OK);
     }
 }
