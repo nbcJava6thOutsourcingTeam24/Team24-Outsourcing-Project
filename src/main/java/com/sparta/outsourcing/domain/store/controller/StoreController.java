@@ -1,10 +1,14 @@
 package com.sparta.outsourcing.domain.store.controller;
 
 import com.sparta.outsourcing.domain.store.dto.request.StoreRequestDto;
+import com.sparta.outsourcing.domain.store.dto.response.StoreResponseDto;
 import com.sparta.outsourcing.domain.store.service.StoreService;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -41,5 +45,16 @@ public class StoreController {
     public ResponseEntity<String> updateStore(@PathVariable Long storeId, @RequestBody StoreRequestDto storeRequestDto) {
         storeService.updateStore(storeId, storeRequestDto);
         return new ResponseEntity<>("가게 정보가 수정되었습니다", HttpStatus.OK);
+    }
+
+    /**
+     * 가게 목록을 조회합니다
+     * @return 가게 목록의 정보와 메뉴목록을 반환합니다.
+     */
+    @GetMapping("/stores")
+    public ResponseEntity<List<StoreResponseDto>> getStoreList()
+    {
+        List<StoreResponseDto> responseList = storeService.getStoreList();
+        return new ResponseEntity<>(responseList, HttpStatus.OK);
     }
 }

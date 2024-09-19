@@ -1,8 +1,12 @@
 package com.sparta.outsourcing.domain.store.service;
 
 import com.sparta.outsourcing.domain.store.dto.request.StoreRequestDto;
+import com.sparta.outsourcing.domain.store.dto.response.StoreResponseDto;
 import com.sparta.outsourcing.domain.store.entity.Store;
 import com.sparta.outsourcing.domain.store.repository.StoreRepository;
+import com.sparta.outsourcing.domain.user.enums.UserRole;
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,18 +21,21 @@ public class StoreService {
 
     public void createStore(StoreRequestDto storeRequestDto) {
 //        User user = User.fromAuthUser(authUser);
-
+//
 //        User user = userRepository.findById(1L)
 //            .orElseThrow(() -> new IllegalArgumentException("User not found"));
-
+//
 //        if(user.getUserRole() != UserRole.OWNER)
 //        {
 //            throw new IllegalArgumentException("Only owner can create store");
 //        }
 //
-//        storeRepository.findByName(storeRequestDto.getName())
-//            .orElseThrow(() -> new IllegalArgumentException("Store not found"));
-
+//        List<Store> stores = storeRepository.findAllByOwnerId(user.getId());
+//        if(stores.size() >= 3)
+//        {
+//            throw new IllegalArgumentException("store size is too large");
+//        }
+//
 //        storeRepository.save(new Store(storeRequestDto, user));
     }
 
@@ -42,5 +49,13 @@ public class StoreService {
 //            throw new IllegalArgumentException("Only owner can update store");
 //        }
         store.update(storeRequestDto);
+    }
+
+
+    public List<StoreResponseDto> getStoreList() {
+        List<Store> stores = storeRepository.findAll();
+        return stores.stream()
+           .map(StoreResponseDto::from)
+           .collect(Collectors.toList());
     }
 }
