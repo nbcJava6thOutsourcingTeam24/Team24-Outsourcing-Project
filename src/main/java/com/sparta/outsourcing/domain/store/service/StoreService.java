@@ -41,15 +41,16 @@ public class StoreService {
         storeRepository.save(new Store(storeRequestDto, user));
     }
 
-    public void updateStore(Long storeId, StoreRequestDto storeRequestDto) {
-//        User user = User.fromAuthUser(authUser);
+    public void updateStore(AuthUser authUser, Long storeId, StoreRequestDto storeRequestDto) {
+        User user = userRepository.findById(authUser.getId())
+            .orElseThrow(() -> new ApplicationException(ErrorCode.USER_NOT_FOUND));
 
         Store store = storeRepository.findById(storeId)
-            .orElseThrow(() -> new IllegalArgumentException("Store not found"));
+            .orElseThrow(() -> new ApplicationException(ErrorCode.STORE_NOT_FOUND));
 
-//        if (store.getOwner().getId() != user.getId()) {
-//            throw new IllegalArgumentException("Only owner can update store");
-//        }
+        if (store.getOwner().getId() != user.getId()) {
+            throw new ApplicationException(ErrorCode.USER_FORBIDDEN);
+        }
         store.update(storeRequestDto);
     }
 
