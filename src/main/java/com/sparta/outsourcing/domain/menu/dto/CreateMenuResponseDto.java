@@ -9,7 +9,7 @@ public class CreateMenuResponseDto {
     private Long id;
     private Long storeId;
     private String menuname;
-    private Integer price;
+    private Long price;
 
     public CreateMenuResponseDto(Menu menu){
         this.id = menu.getId();
