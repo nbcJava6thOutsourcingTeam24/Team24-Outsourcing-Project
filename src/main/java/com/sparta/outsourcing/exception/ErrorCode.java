@@ -1,4 +1,4 @@
-package com.sparta.outsourcing.config;
+package com.sparta.outsourcing.exception;
 
 public enum ErrorCode {
 
