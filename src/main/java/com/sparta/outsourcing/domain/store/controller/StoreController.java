@@ -72,7 +72,7 @@ public class StoreController {
      */
     @GetMapping("/stores/{storeId}")
     public ResponseEntity<StoreResponseDto> getStore(@PathVariable Long storeId) {
-        return new ResponseEntity<>(storeService.getStore(), HttpStatus.OK);
+        return new ResponseEntity<>(storeService.getStore(storeId), HttpStatus.OK);
     }
 
     /**

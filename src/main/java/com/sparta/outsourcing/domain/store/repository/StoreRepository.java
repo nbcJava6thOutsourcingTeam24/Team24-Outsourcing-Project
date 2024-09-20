@@ -10,4 +10,6 @@ public interface StoreRepository extends JpaRepository<Store, Long> {
     Optional<Store> findByName(String name);
 
     List<Store> findAllByOwnerIdAndStatusFalse(Long ownerId);
+
+    List<Store> findAllByStatusFalse();
 }
