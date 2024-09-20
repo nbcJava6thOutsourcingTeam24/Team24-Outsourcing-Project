@@ -1,9 +1,8 @@
 package com.sparta.outsourcing.domain.menu.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import com.sparta.outsourcing.domain.menu.dto.CreateMenuRequestDto;
+import com.sparta.outsourcing.domain.store.entity.Store;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -16,6 +15,23 @@ public class Menu {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
-    private Integer price;
+    private Long price;
     private boolean status = false;
+
+    @ManyToOne
+    @JoinColumn(name = "store_id")
+    private Store store;
+
+//    public createMenu(String name, Long price, boolean status, Store store){
+//        this.name = name;
+//        this.price = price;
+//        this.status = status;
+//        this.store = store;
+//    }
+
+    public Menu(CreateMenuRequestDto createMenuRequestDto, Store store) {
+        this.name = createMenuRequestDto.getMenuname();
+        this.price = createMenuRequestDto.getPrice();
+        this.store = store;
+    }
 }
