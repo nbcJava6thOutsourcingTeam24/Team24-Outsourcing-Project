@@ -45,8 +45,8 @@ public class StoreController {
      * @return 완료 응답을 생성합니다.
      */
     @PutMapping("/stores/{storeId}")
-    public ResponseEntity<String> updateStore(@PathVariable Long storeId, @RequestBody StoreRequestDto storeRequestDto) {
-        storeService.updateStore(storeId, storeRequestDto);
+    public ResponseEntity<String> updateStore(@Auth AuthUser authUser, @PathVariable Long storeId, @RequestBody StoreRequestDto storeRequestDto) {
+        storeService.updateStore(authUser, storeId, storeRequestDto);
         return new ResponseEntity<>("가게 정보가 수정되었습니다", HttpStatus.OK);
     }
 
