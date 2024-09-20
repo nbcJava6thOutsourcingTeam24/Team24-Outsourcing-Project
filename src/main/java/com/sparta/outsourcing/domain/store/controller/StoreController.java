@@ -3,6 +3,8 @@ package com.sparta.outsourcing.domain.store.controller;
 import com.sparta.outsourcing.domain.store.dto.request.StoreRequestDto;
 import com.sparta.outsourcing.domain.store.dto.response.StoreResponseDto;
 import com.sparta.outsourcing.domain.store.service.StoreService;
+import com.sparta.outsourcing.domain.user.config.annotation.Auth;
+import com.sparta.outsourcing.domain.user.dto.AuthUser;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -31,8 +33,8 @@ public class StoreController {
      * @return 완료 응답을 생성합니다.
      */
     @PostMapping("/stores")
-    public ResponseEntity<String> createStore(@RequestBody StoreRequestDto storeRequestDto) {
-        storeService.createStore(storeRequestDto);
+    public ResponseEntity<String> createStore(@Auth AuthUser authUser,  @RequestBody StoreRequestDto storeRequestDto) {
+        storeService.createStore(authUser, storeRequestDto);
         return new ResponseEntity<>("가게 생성이 완료되었습니다", HttpStatus.CREATED);
     }
 
