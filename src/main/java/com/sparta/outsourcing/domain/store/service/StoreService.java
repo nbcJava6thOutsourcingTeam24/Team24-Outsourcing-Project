@@ -69,15 +69,16 @@ public class StoreService {
         return StoreResponseDto.fromWithMenu(store);
     }
 
-    public void deleteStore(Long storeId) {
-//        User user = User.fromAuthUser(authUser);
+    public void deleteStore(AuthUser authUser, Long storeId) {
+        User user = userRepository.findById(authUser.getId())
+            .orElseThrow(() -> new ApplicationException(ErrorCode.USER_NOT_FOUND));
 
         Store store = storeRepository.findById(storeId)
-            .orElseThrow(() -> new IllegalArgumentException("Store not found"));
+            .orElseThrow(() -> new ApplicationException(ErrorCode.STORE_NOT_FOUND));
 
-//        if (user.getId().equals(store.getOwner().getId())) {
-//            throw new IllegalArgumentException("Only owner can delete store");
-//        }
+        if (!user.getId().equals(store.getOwner().getId())) {
+            throw new ApplicationException(ErrorCode.USER_FORBIDDEN);
+        }
 
         store.delete();
     }
