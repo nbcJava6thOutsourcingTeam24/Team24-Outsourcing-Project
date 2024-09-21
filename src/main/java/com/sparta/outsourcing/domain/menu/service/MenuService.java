@@ -2,6 +2,8 @@ package com.sparta.outsourcing.domain.menu.service;
 
 import com.sparta.outsourcing.domain.menu.dto.CreateMenuRequestDto;
 import com.sparta.outsourcing.domain.menu.dto.CreateMenuResponseDto;
+import com.sparta.outsourcing.domain.menu.dto.UpdateMenuRequestDto;
+import com.sparta.outsourcing.domain.menu.dto.UpdateMenuResponseDto;
 import com.sparta.outsourcing.domain.menu.entity.Menu;
 import com.sparta.outsourcing.domain.menu.repository.MenuRepository;
 import com.sparta.outsourcing.domain.store.entity.Store;
@@ -47,5 +49,29 @@ public class MenuService {
 
         // DB 저장 및 responseDto로 반환
         return new CreateMenuResponseDto(menuRepository.save(menu));
+    }
+
+    public UpdateMenuResponseDto updateMenu(Long storeId, Long menuId, UpdateMenuRequestDto updateMenuRequestDto, AuthUser authUser) {
+        // 유저 권한 확인
+        User currentUser = userRepository.findById(authUser.getId())
+                .orElseThrow(() -> new ApplicationException(ErrorCode.USER_NOT_FOUND));
+
+        if (currentUser.getUserRole() != UserRole.OWNER) {
+            throw new ApplicationException(ErrorCode.USER_FORBIDDEN);
+        }
+
+        // 가게 조회
+        Store store = storeRepository.findById(storeId)
+                .orElseThrow(()-> new ApplicationException(ErrorCode.STORE_NOT_FOUND));
+
+        // 메뉴 조회
+        Menu menu = menuRepository.findByIdAndStoreId(menuId, store.getId())
+                .orElseThrow(()-> new ApplicationException(ErrorCode.MENU_NOT_FOUND));
+
+        // 메뉴 수정
+        menu.updateMenu(updateMenuRequestDto);
+
+        // DB 저장 및 ResponseDto로 반환
+        return new UpdateMenuResponseDto(menuRepository.save(menu));
     }
 }
