@@ -1,9 +1,11 @@
 package com.sparta.outsourcing.domain.menu.controller;
 
 import com.sparta.outsourcing.domain.menu.dto.CreateMenuRequestDto;
-import com.sparta.outsourcing.domain.menu.dto.CreateMenuResponseDto;
 import com.sparta.outsourcing.domain.menu.service.MenuService;
+import com.sparta.outsourcing.domain.user.config.annotation.Auth;
+import com.sparta.outsourcing.domain.user.dto.AuthUser;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,16 +18,18 @@ public class MenuController {
 
     /**
      * 메뉴 생성
-     * @param requestDto
+     * @param createMenuRequestDto
      * @param authUser
      * @return 상태코드 201, 생성된 메뉴 정보
      */
     @PostMapping("{storeId}/menus")
-    public ResponseEntity<CreateMenuResponseDto> createMenu (
+    public ResponseEntity<String> createMenu (
+            @Auth AuthUser authUser,
             @PathVariable(value = "storeId") Long storeId,
             @RequestBody CreateMenuRequestDto createMenuRequestDto
     ){
-        return ResponseEntity.ok(menuService.createMenu(storeId, createMenuRequestDto));
+        menuService.createMenu(storeId, createMenuRequestDto, authUser);
+        return new ResponseEntity<>("메뉴 생성이 완료되었습니다", HttpStatus.CREATED);
     }
 
     /**
