@@ -108,4 +108,22 @@ public class StoreService {
 
         store.delete();
     }
+
+    public void createAdvertisement(AuthUser authUser, Long storeId) {
+        User user = userRepository.findById(authUser.getId())
+            .orElseThrow(() -> new ApplicationException(ErrorCode.USER_NOT_FOUND));
+
+        Store store = storeRepository.findById(storeId)
+            .orElseThrow(() -> new ApplicationException(ErrorCode.STORE_NOT_FOUND));
+
+        if (store.isStatus()) {
+            throw new ApplicationException(ErrorCode.STORE_NOT_FOUND);
+        }
+
+        if (store.getOwner().getId()!= user.getId()) {
+            throw new ApplicationException(ErrorCode.USER_FORBIDDEN);
+        }
+
+        store.enableAdvertisement();
+    }
 }

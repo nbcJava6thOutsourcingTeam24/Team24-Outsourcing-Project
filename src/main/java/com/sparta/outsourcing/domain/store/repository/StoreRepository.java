@@ -14,6 +14,6 @@ public interface StoreRepository extends JpaRepository<Store, Long> {
 
     List<Store> findAllByStatusFalse();
 
-    @Query("SELECT s From Store s Where s.name = :storeName AND s.status = false")
+    @Query("SELECT s From Store s Where s.name = :storeName AND s.status = false ORDER BY s.isAdvertised DESC")
     List<Store> findStoreByName(String storeName);
 }

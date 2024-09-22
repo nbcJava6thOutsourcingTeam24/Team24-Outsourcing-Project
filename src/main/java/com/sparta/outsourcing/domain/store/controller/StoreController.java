@@ -87,4 +87,17 @@ public class StoreController {
         storeService.deleteStore(authUser, storeId);
         return new ResponseEntity<>("가게 폐업처리가 완료되었습니다.", HttpStatus.OK);
     }
+
+    /**
+     * 가게의 광고를 등록합니다
+     * @param authUser 유저의 정보를 받습니다
+     * @param storeId 가게의 아이디를 받습니다
+     * @param content
+     * @return
+     */
+    @PostMapping("/stores/{storeId}/advertisement")
+    public ResponseEntity<String> createAdvertisement(@Auth AuthUser authUser, @PathVariable Long storeId) {
+        storeService.createAdvertisement(authUser, storeId);
+        return new ResponseEntity<>("광고 등록이 완료되었습니다.", HttpStatus.CREATED);
+    }
 }

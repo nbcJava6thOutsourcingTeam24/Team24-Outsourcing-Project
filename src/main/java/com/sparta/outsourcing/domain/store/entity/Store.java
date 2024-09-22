@@ -33,6 +33,7 @@ public class Store extends Timestamped {
     @Column(nullable = false)
     private Integer minPrice;
     private String notice;
+    private boolean isAdvertised = false;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "owner_id")
@@ -57,5 +58,9 @@ public class Store extends Timestamped {
 
     public void delete() {
         this.status = true;
+    }
+
+    public void enableAdvertisement() {
+        this.isAdvertised = true;
     }
 }
