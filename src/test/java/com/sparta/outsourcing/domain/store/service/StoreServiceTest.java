@@ -17,6 +17,7 @@ import com.sparta.outsourcing.domain.user.enums.UserRole;
 import com.sparta.outsourcing.domain.user.repository.UserRepository;
 import com.sparta.outsourcing.exception.ApplicationException;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -273,6 +274,61 @@ class StoreServiceTest {
         //when - then
         ApplicationException exception = assertThrows(ApplicationException.class, () ->
             storeService.getStoreList("가게")
+        );
+
+        assertEquals("가게가 존재하지 않습니다", exception.getMessage());
+    }
+
+    @Test
+    @DisplayName("가게 단건 조회 테스트 - 성공")
+    void getStore_success() {
+        // given
+        User user = new User("user@exampel.com", "1234", UserRole.OWNER);
+        ReflectionTestUtils.setField(user, "id", 1L);
+
+        Store store = new Store(new StoreRequestDto("가게", LocalTime.parse("12:00"), LocalTime.parse("18:00"), 18000, "공지"), user);
+        ReflectionTestUtils.setField(store, "id", 1L);
+
+        when(storeRepository.findById(store.getId())).thenReturn(Optional.of(store));
+
+        // when
+        StoreResponseDto storeResponseDto = storeService.getStore(store.getId());
+
+        // then
+        assertEquals("가게", storeResponseDto.getName());
+        assertEquals(LocalTime.parse("12:00"), storeResponseDto.getOpenTime());
+        assertEquals(LocalTime.parse("18:00"), storeResponseDto.getCloseTime());
+        assertEquals(18000, storeResponseDto.getMinPrice());
+        assertEquals("공지", storeResponseDto.getNotice());
+    }
+
+    @Test
+    @DisplayName("가게 단건 조회 테스트 - 실패 - 가게폐쇄")
+    void getStore_fail_storeIsClosed(){
+        // given
+        User user = new User("user@exampel.com", "1234", UserRole.OWNER);
+        ReflectionTestUtils.setField(user, "id", 1L);
+
+        Store store = new Store(new StoreRequestDto("가게", LocalTime.parse("12:00"), LocalTime.parse("18:00"), 18000, "공지"), user);
+        ReflectionTestUtils.setField(store, "id", 1L);
+        ReflectionTestUtils.setField(store, "status", true);
+
+        when(storeRepository.findById(store.getId())).thenReturn(Optional.of(store));
+
+        //when - then
+        ApplicationException exception = assertThrows(ApplicationException.class, () ->
+            storeService.getStore(1L)
+        );
+
+        assertEquals("가게가 존재하지 않습니다", exception.getMessage());
+    }
+
+    @Test
+    @DisplayName("\"가게 단건 조회 테스트 - 실패 - 가게가 없을때")
+    void getStore_fail_storeNotFound(){
+        //when - then
+        ApplicationException exception = assertThrows(ApplicationException.class, () ->
+            storeService.getStore(1L)
         );
 
         assertEquals("가게가 존재하지 않습니다", exception.getMessage());
