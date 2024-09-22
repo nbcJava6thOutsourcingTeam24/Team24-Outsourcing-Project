@@ -22,7 +22,7 @@ public class MenuController {
      * @param storeId
      * @param createMenuRequestDto
      * * @param authUser
-     * @return 상태코드 201, 생성된 메뉴 정보
+     * @return 생성된 메뉴 정보
      */
     @PostMapping("{storeId}/menus")
     public ResponseEntity<String> createMenu (
@@ -40,7 +40,7 @@ public class MenuController {
      * @param menuId
      * @param updateMenuRequestDto
      * @param authUser
-     * @return 상태코드 200, 업데이트된 메뉴 정보
+     * @return 업데이트된 메뉴 정보
      */
     @PutMapping("/stores/{storeId}/menus/{menuId}")
     public ResponseEntity<String> updateMenu(
@@ -55,11 +55,21 @@ public class MenuController {
 
 
     /**
-     * 메뉴 삭제
+     * 메뉴 삭제 (SOFT - DELETE로 구현)
+     * @param storeId
      * @param menuId
      * @param authUser
-     * @return 상태코드 200, 삭제된 메뉴 아이디
+     * @return 삭제 완료 메시지
      */
+    @DeleteMapping("stores/{storeId}/menus/{menuId}")
+    public ResponseEntity<String> deleteMenu(
+            @Auth AuthUser authUser,
+            @PathVariable(value = "storeId") Long storeId,
+            @PathVariable(value = "menuId") Long menuId
+    ){
+        menuService.deleteMenu(storeId, menuId, authUser);
+        return new ResponseEntity<>("메뉴 삭제가 완료되었습니다.", HttpStatus.OK);
+    }
 
 
 }

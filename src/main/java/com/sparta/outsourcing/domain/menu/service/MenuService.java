@@ -40,7 +40,7 @@ public class MenuService {
         Store store = storeRepository.findById(storeId)
                 .orElseThrow(()-> new ApplicationException(ErrorCode.STORE_NOT_FOUND));
 
-        if(currentUser.equals(store.getOwner())){
+        if(!currentUser.equals(store.getOwner())){
             throw new ApplicationException(ErrorCode.USER_FORBIDDEN);
         }
 
@@ -64,6 +64,10 @@ public class MenuService {
         Store store = storeRepository.findById(storeId)
                 .orElseThrow(()-> new ApplicationException(ErrorCode.STORE_NOT_FOUND));
 
+        if(!currentUser.equals(store.getOwner())){
+            throw new ApplicationException(ErrorCode.USER_FORBIDDEN);
+        }
+
         // 메뉴 조회
         Menu menu = menuRepository.findByIdAndStoreId(menuId, store.getId())
                 .orElseThrow(()-> new ApplicationException(ErrorCode.MENU_NOT_FOUND));
@@ -73,5 +77,36 @@ public class MenuService {
 
         // DB 저장 및 ResponseDto로 반환
         return new UpdateMenuResponseDto(menuRepository.save(menu));
+    }
+
+    public void deleteMenu(Long storeId, Long menuId, AuthUser authUser) {
+        // 유저 권한 확인
+        User currentUser = userRepository.findById(authUser.getId())
+                .orElseThrow(() -> new ApplicationException(ErrorCode.USER_NOT_FOUND));
+
+        if (currentUser.getUserRole() != UserRole.OWNER) {
+            throw new ApplicationException(ErrorCode.USER_FORBIDDEN);
+        }
+
+        // 가게 조회
+        Store store = storeRepository.findById(storeId)
+                .orElseThrow(()-> new ApplicationException(ErrorCode.STORE_NOT_FOUND));
+
+        if(!currentUser.equals(store.getOwner())){
+            throw new ApplicationException(ErrorCode.USER_FORBIDDEN);
+        }
+
+        // 메뉴 조회
+        Menu menu = menuRepository.findByIdAndStoreId(menuId, store.getId())
+                .orElseThrow(()-> new ApplicationException(ErrorCode.MENU_NOT_FOUND));
+
+        // 삭제 여부 확인
+        if(menu.getDeleted()){
+            throw new ApplicationException(ErrorCode.MENU_NOT_FOUND);
+        }
+
+        // 메뉴 삭제
+        menu.deleteMenu();
+
     }
 }
