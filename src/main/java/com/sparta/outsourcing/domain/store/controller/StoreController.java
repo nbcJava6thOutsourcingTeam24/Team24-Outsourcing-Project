@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -59,8 +60,8 @@ public class StoreController {
      * @return 가게 목록의 정보와 메뉴목록을 반환합니다.
      */
     @GetMapping("/stores")
-    public ResponseEntity<List<StoreResponseDto>> getStoreList() {
-        List<StoreResponseDto> responseList = storeService.getStoreList();
+    public ResponseEntity<List<StoreResponseDto>> getStoreList(@RequestParam String name) {
+        List<StoreResponseDto> responseList = storeService.getStoreList(name);
         return new ResponseEntity<>(responseList, HttpStatus.OK);
     }
 

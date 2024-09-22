@@ -59,8 +59,14 @@ public class StoreService {
     }
 
 
-    public List<StoreResponseDto> getStoreList() {
-        List<Store> stores = storeRepository.findAllByStatusFalse();
+    public List<StoreResponseDto> getStoreList(String name) {
+        List<Store> stores = storeRepository.findStoreByName(name);
+
+        if(stores.isEmpty())
+        {
+            throw new ApplicationException(ErrorCode.STORE_NOT_FOUND);
+        }
+
         return stores.stream()
             .map(StoreResponseDto::from)
             .collect(Collectors.toList());
