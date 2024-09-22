@@ -10,4 +10,5 @@ public class StoreRequestDto {
     private LocalTime openTime;
     private LocalTime closeTime;
     private Integer minPrice;
+    private String notice;
 }

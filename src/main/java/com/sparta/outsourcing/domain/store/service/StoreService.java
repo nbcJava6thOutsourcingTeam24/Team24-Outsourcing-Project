@@ -73,7 +73,8 @@ public class StoreService {
                 store.getName(),
                 store.getOpenTime(),
                 store.getCloseTime(),
-                store.getMinPrice()
+                store.getMinPrice(),
+                store.getNotice()
             ))
             .collect(Collectors.toList());
     }
@@ -87,7 +88,7 @@ public class StoreService {
         }
 
         return new StoreResponseDto(store.getId(), store.getName(),
-            store.getOpenTime(), store.getCloseTime(), store.getMinPrice());
+            store.getOpenTime(), store.getCloseTime(), store.getMinPrice(), store.getNotice());
     }
 
     public void deleteStore(AuthUser authUser, Long storeId) {

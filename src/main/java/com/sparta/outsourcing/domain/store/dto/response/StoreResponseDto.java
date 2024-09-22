@@ -13,14 +13,16 @@ public class StoreResponseDto {
     private LocalTime openTime;
     private LocalTime closeTime;
     private Integer minPrice;
+    private String notice;
 //    private List<MenuReponseDto> menuList;
 
     public StoreResponseDto(Long id, String name, LocalTime openTime, LocalTime closeTime,
-        Integer minPrice) {
+        Integer minPrice, String notice) {
         this.id = id;
         this.name = name;
         this.openTime = openTime;
         this.closeTime = closeTime;
         this.minPrice = minPrice;
+        this.notice = notice;
     }
 }
