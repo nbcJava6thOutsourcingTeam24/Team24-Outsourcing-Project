@@ -8,6 +8,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.sparta.outsourcing.domain.store.dto.request.StoreRequestDto;
+import com.sparta.outsourcing.domain.store.dto.response.StoreResponseDto;
 import com.sparta.outsourcing.domain.store.entity.Store;
 import com.sparta.outsourcing.domain.store.repository.StoreRepository;
 import com.sparta.outsourcing.domain.user.dto.AuthUser;
@@ -16,7 +17,9 @@ import com.sparta.outsourcing.domain.user.enums.UserRole;
 import com.sparta.outsourcing.domain.user.repository.UserRepository;
 import com.sparta.outsourcing.exception.ApplicationException;
 import java.time.LocalTime;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -235,5 +238,43 @@ class StoreServiceTest {
         );
 
         assertEquals("계정의 권한이 없습니다.", exception.getMessage());
+    }
+
+    @Test
+    @DisplayName("가게 목록 조회 테스트 - 성공")
+    void getStoreList_success() {
+        // given
+        String storeName = "가게";
+        User user = new User("user@example.com", "1234", UserRole.OWNER);
+        ReflectionTestUtils.setField(user, "id", 1L);
+
+        Store store1 = new Store(new StoreRequestDto("가게", LocalTime.parse("12:00"), LocalTime.parse("18:00"), 18000, "공지1"), user);
+        ReflectionTestUtils.setField(store1, "id", 1L);
+
+        Store store2 = new Store(new StoreRequestDto("가게", LocalTime.parse("13:00"), LocalTime.parse("20:00"), 20000, "공지2"), user);
+        ReflectionTestUtils.setField(store2, "id", 2L);
+
+        List<Store> stores = Arrays.asList(store1, store2);
+
+        when(storeRepository.findStoreByName(storeName)).thenReturn(stores);
+
+        // when
+        List<StoreResponseDto> storeResponseDtos = storeService.getStoreList(storeName);
+
+        // then
+        assertEquals(2, storeResponseDtos.size());
+        assertEquals("가게", storeResponseDtos.get(0).getName());
+        assertEquals("가게", storeResponseDtos.get(1).getName());
+    }
+
+    @Test
+    @DisplayName("가게 목록 조회 테스트 - 실패 - 스토어가 존재하지 않을때")
+    void getStoreList_fail_notFoundStore() {
+        //when - then
+        ApplicationException exception = assertThrows(ApplicationException.class, () ->
+            storeService.getStoreList("가게")
+        );
+
+        assertEquals("가게가 존재하지 않습니다", exception.getMessage());
     }
 }
