@@ -1,36 +1,48 @@
 package com.sparta.outsourcing.exception;
 
-import org.hibernate.sql.Delete;
+import lombok.Getter;
+import org.springframework.http.HttpStatus;
 
+@Getter
 public enum ErrorCode {
 
-    BAD_REQUEST(400, "잘못된 요청입니다."),
-    INVALID_STORE_SIZE(400, "가게는 최대 3개만 등록 가능합니다"),
+    BAD_REQUEST(HttpStatus.BAD_REQUEST, "잘못된 요청입니다."),
+    INVALID_STORE_SIZE(HttpStatus.BAD_REQUEST, "가게는 최대 3개만 등록 가능합니다."),
 
-    TOKEN_INVALID(401, "토큰이 유효하지 않습니다."),
+    TOKEN_INVALID(HttpStatus.UNAUTHORIZED, "토큰이 유효하지 않습니다."),
 
-    USER_FORBIDDEN(403, "계정의 권한이 없습니다."),
+    USER_FORBIDDEN(HttpStatus.FORBIDDEN, "계정의 권한이 없습니다."),
 
-    PASSWORD_NOT_MATCH(404, "비밀번호가 일치하지 않습니다"),
-    USER_NOT_FOUND(404, "유저가 존재하지 않습니다"),
-    STORE_NOT_FOUND(404, "가게가 존재하지 않습니다"),
+    PASSWORD_NOT_MATCH(HttpStatus.FORBIDDEN, "비밀번호가 일치하지 않습니다."),
+    USER_NOT_FOUND(HttpStatus.NOT_FOUND, "고객이 존재하지 않습니다."),
+    STORE_NOT_FOUND(HttpStatus.NOT_FOUND, "가게가 존재하지 않습니다."),
 
-    ALREADY_USER_EXIST(409, "이미 존재하는 회원입니다"),
-    PASSWORD_SAME_OLD(409, "기존 비밀번호와 동일합니다");
+    ALREADY_USER_EXIST(HttpStatus.CONFLICT, "이미 존재하는 회원입니다."),
+    PASSWORD_SAME_OLD(HttpStatus.CONFLICT, "기존 비밀번호와 동일합니다."),
 
-    private final int statusCodee;
+    MENU_NOT_FOUND(HttpStatus.NOT_FOUND, "메뉴가 존재하지 않습니다."),
+    ORDER_NOT_FOUND(HttpStatus.NOT_FOUND, "주문이 존재하지 않습니다."),
+    MINIMUM_ORDER_AMOUNT_NOT_MET(HttpStatus.BAD_REQUEST, "최소 주문 금액을 충족하지 못했습니다."),
+    STORE_CLOSED(HttpStatus.FORBIDDEN, "가게가 영업중이 아닙니다."),
+
+    INVALID_USER_FOR_ORDER(HttpStatus.FORBIDDEN, "주문 취소 권한이 없습니다. 해당 주문을 생성한 유저만 주문을 취소할 수 있습니다."),
+    ORDER_STATUS_CHANGE_FORBIDDEN(HttpStatus.FORBIDDEN, "주문 상태 변경 권한이 없습니다. 사장님만 주문 상태를 변경할 수 있습니다."),
+    INVALID_ORDER_STATUS_TRANSITION(HttpStatus.BAD_REQUEST, "비정상적인 주문 상태 변경 요청입니다."),
+    INVALID_TRANSITION_FROM_ORDER_CONFIRMED_TO_CANCELLED(HttpStatus.BAD_REQUEST, "주문 확인 상태에서만 주문 취소가 가능합니다."),
+    INVALID_TRANSITION_FROM_ORDER_PREPARING_TO_CANCELLED(HttpStatus.BAD_REQUEST, "주문 준비 중 상태에서만 주문 취소가 가능합니다."),
+    INVALID_TRANSITION_FROM_ORDER_DELIVERED_TO_CANCELLED(HttpStatus.BAD_REQUEST, "배달 완료 상태에서는 주문 취소가 불가능합니다."),
+    ALREADY_ORDER_STATUS(HttpStatus.BAD_REQUEST, "이미 해당 주문 상태입니다."),
+    INVALID_OWNER_FOR_ORDER(HttpStatus.FORBIDDEN, "주문 상태를 변경할 권한이 없습니다. 해당 가게의 사장님만 주문 상태를 변경할 수 있습니다."),
+    INVALID_ORDER_STATUS(HttpStatus.BAD_REQUEST, "주문 요청 상태가 올바르지 않습니다."),
+    INVALID_ORDER_CREATION_FOR_OWNER(HttpStatus.FORBIDDEN, "사장님은 주문을 요청할 수 없습니다."),
+    ORDER_ACCESS_DENIED(HttpStatus.FORBIDDEN, "주문 접근 권한이 없습니다.");
+
+    private final HttpStatus httpStatus;
     private final String message;
 
-    ErrorCode(final int statusCodee, final String message) {
-        this.statusCodee = statusCodee;
+    ErrorCode(final HttpStatus httpStatus, final String message) {
+        this.httpStatus = httpStatus;
         this.message = message;
     }
 
-    public int statusCode() {
-        return statusCodee;
-    }
-
-    public String message() {
-        return message;
-    }
 }

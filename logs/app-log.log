@@ -1,0 +1,39 @@
+2024-09-23 05:43:29.449 [background-preinit] INFO  o.h.validator.internal.util.Version - HV000001: Hibernate Validator 8.0.1.Final
+2024-09-23 05:43:29.479 [main] INFO  c.s.o.OutsourcingApplication - Starting OutsourcingApplication using Java 17.0.12 with PID 46588 (C:\Team24-Outsourcing-Project\build\classes\java\main started by Admin in C:\Team24-Outsourcing-Project)
+2024-09-23 05:43:29.479 [main] INFO  c.s.o.OutsourcingApplication - No active profile set, falling back to 1 default profile: "default"
+2024-09-23 05:43:29.924 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2024-09-23 05:43:29.971 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 42 ms. Found 4 JPA repository interfaces.
+2024-09-23 05:43:30.455 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+2024-09-23 05:43:30.463 [main] INFO  o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+2024-09-23 05:43:30.465 [main] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2024-09-23 05:43:30.465 [main] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.28]
+2024-09-23 05:43:30.510 [main] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2024-09-23 05:43:30.511 [main] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 1005 ms
+2024-09-23 05:43:30.642 [main] INFO  o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2024-09-23 05:43:30.689 [main] INFO  org.hibernate.Version - HHH000412: Hibernate ORM core version 6.5.2.Final
+2024-09-23 05:43:30.715 [main] INFO  o.h.c.i.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2024-09-23 05:43:30.948 [main] INFO  o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2024-09-23 05:43:30.969 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2024-09-23 05:43:31.161 [main] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@4946485c
+2024-09-23 05:43:31.162 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2024-09-23 05:43:31.910 [main] INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2024-09-23 05:43:31.967 [main] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2024-09-23 05:43:32.720 [main] INFO  o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+2024-09-23 05:43:32.732 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/'
+2024-09-23 05:43:32.739 [main] INFO  c.s.o.OutsourcingApplication - Started OutsourcingApplication in 3.656 seconds (process running for 4.036)
+2024-09-23 05:43:41.829 [http-nio-8080-exec-1] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2024-09-23 05:43:41.829 [http-nio-8080-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2024-09-23 05:43:41.830 [http-nio-8080-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 1 ms
+2024-09-23 05:43:41.942 [http-nio-8080-exec-1] INFO  c.sparta.outsourcing.aop.LogUtility - [요청 처리 시작] 메서드: OrderService.createOrder(..), 기능: '주문 생성', 요청자: 유저 ID: 2, 권한: OWNER, 가게 ID: 1, 시작 시간: 2024-09-23T05:43:41.940577200
+2024-09-23 05:43:41.943 [http-nio-8080-exec-1] ERROR c.sparta.outsourcing.aop.LogUtility - [요청 실패] 메서드: OrderService.createOrder(..), 기능: '주문 생성', 요청자: 유저 ID: 2, 권한: OWNER, 가게 ID: 1, 시작 시간: 2024-09-23T05:43:41.940577200, 에러 발생 시간: 2024-09-23T05:43:41.943577800
+2024-09-23 05:43:41.943 [http-nio-8080-exec-1] ERROR c.sparta.outsourcing.aop.LogUtility - Order AOP 에러 메시지: 사장님은 주문을 요청할 수 없습니다.
+2024-09-23 05:43:41.944 [http-nio-8080-exec-1] ERROR c.sparta.outsourcing.aop.LogUtility - 스택 트레이스 (현재 스택 제어 최대 5줄):
+2024-09-23 05:43:41.944 [http-nio-8080-exec-1] ERROR c.sparta.outsourcing.aop.LogUtility - at com.sparta.outsourcing.domain.order.service.OrderService.createOrder(OrderService.java:38)
+2024-09-23 05:43:41.944 [http-nio-8080-exec-1] ERROR c.sparta.outsourcing.aop.LogUtility - at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+2024-09-23 05:43:41.944 [http-nio-8080-exec-1] ERROR c.sparta.outsourcing.aop.LogUtility - at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+2024-09-23 05:43:41.944 [http-nio-8080-exec-1] ERROR c.sparta.outsourcing.aop.LogUtility - at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+2024-09-23 05:43:41.944 [http-nio-8080-exec-1] ERROR c.sparta.outsourcing.aop.LogUtility - at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+2024-09-23 05:43:41.946 [http-nio-8080-exec-1] ERROR c.s.o.e.GlobalExceptionHandler - 비즈니스 예외 발생 - 403 FORBIDDEN : 사장님은 주문을 요청할 수 없습니다.
+2024-09-23 05:47:23.313 [SpringApplicationShutdownHook] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2024-09-23 05:47:23.314 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2024-09-23 05:47:23.319 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
