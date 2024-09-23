@@ -3,6 +3,7 @@ package com.sparta.outsourcing.domain.user.config.auth;
 import com.sparta.outsourcing.domain.user.config.annotation.Auth;
 import com.sparta.outsourcing.domain.user.config.error.AuthErrorCode;
 import com.sparta.outsourcing.domain.user.dto.AuthUser;
+import com.sparta.outsourcing.domain.user.enums.UserRole;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.core.MethodParameter;
 import org.springframework.lang.Nullable;
@@ -39,7 +40,8 @@ public class AuthUserArgumentResolver implements HandlerMethodArgumentResolver {
         // JwtFilter 에서 set 한 userId, email 값을 가져옴
         Long userId = (Long) request.getAttribute("userId");
         String email = (String) request.getAttribute("email");
+        UserRole userRole = UserRole.valueOf(request.getAttribute("role").toString());
 
-        return new AuthUser(userId, email);
+        return new AuthUser(userId, email, userRole);
     }
 }

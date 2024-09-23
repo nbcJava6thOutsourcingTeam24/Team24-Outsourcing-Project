@@ -1,5 +1,7 @@
 package com.sparta.outsourcing.exception;
 
+import org.hibernate.sql.Delete;
+
 public enum ErrorCode {
 
     BAD_REQUEST(400, "잘못된 요청입니다."),
