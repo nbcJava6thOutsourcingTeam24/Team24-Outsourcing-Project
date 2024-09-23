@@ -422,4 +422,82 @@ class StoreServiceTest {
         assertEquals("계정의 권한이 없습니다.", exception.getMessage());
     }
 
+
+    @Test
+    @DisplayName("가게 광고 테스트 - 성공")
+    void addAdvertisement_success() {
+        // given
+        User user = new User("user@example.com", "1234", UserRole.OWNER);
+        ReflectionTestUtils.setField(user, "id", 1L);
+
+        AuthUser authUser = new AuthUser(user.getId(), user.getEmail(), user.getUserRole());
+
+        Store store = new Store(
+            new StoreRequestDto("가게", LocalTime.parse("12:00"), LocalTime.parse("18:00"), 18000,
+                "공지"), user);
+        ReflectionTestUtils.setField(store, "id", 1L);
+
+        when(userRepository.findById((user.getId()))).thenReturn(Optional.of(user));
+        when(storeRepository.findById(store.getId())).thenReturn(Optional.of(store));
+
+        // when
+        storeService.createAdvertisement(authUser, store.getId());
+
+        // then
+        assertEquals(true, store.isAdvertised());
+    }
+
+    @Test
+    @DisplayName("가게 광고 테스트 - 실패 - 이미 영업종료된 가게")
+    void addAdvertisement_fail_notFoundStore() {
+        // given
+        User user = new User("user@example.com", "1234", UserRole.OWNER);
+        ReflectionTestUtils.setField(user, "id", 1L);
+
+        AuthUser authUser = new AuthUser(user.getId(), user.getEmail(), user.getUserRole());
+
+        Store store = new Store(
+            new StoreRequestDto("가게", LocalTime.parse("12:00"), LocalTime.parse("18:00"), 18000,
+                "공지"), user);
+        ReflectionTestUtils.setField(store, "id", 1L);
+        ReflectionTestUtils.setField(store, "status", true);
+
+        when(userRepository.findById((user.getId()))).thenReturn(Optional.of(user));
+        when(storeRepository.findById(store.getId())).thenReturn(Optional.of(store));
+
+        //when - then
+        ApplicationException exception = assertThrows(ApplicationException.class, () ->
+            storeService.createAdvertisement(authUser, store.getId())
+        );
+
+        assertEquals("가게가 존재하지 않습니다", exception.getMessage());
+    }
+
+    @Test
+    @DisplayName("가게 광고 테스트 - 실패 - 다른 유저가 삭제하려고 시도할때")
+    void addAdvertisement_fail_anotherUser() {
+        // given
+        User user1 = new User("user@example.com", "1234", UserRole.OWNER);
+        ReflectionTestUtils.setField(user1, "id", 1L);
+
+        User user2 = new User("user@example.com", "1234", UserRole.OWNER);
+        ReflectionTestUtils.setField(user2, "id", 2L);
+
+        AuthUser authUser2 = new AuthUser(user2.getId(), user2.getEmail(), user2.getUserRole());
+
+        Store store = new Store(
+            new StoreRequestDto("가게", LocalTime.parse("12:00"), LocalTime.parse("18:00"), 18000,
+                "공지"), user1);
+        ReflectionTestUtils.setField(store, "id", 1L);
+
+        when(userRepository.findById((user2.getId()))).thenReturn(Optional.of(user2));
+        when(storeRepository.findById(store.getId())).thenReturn(Optional.of(store));
+
+        //when - then
+        ApplicationException exception = assertThrows(ApplicationException.class, () ->
+            storeService.createAdvertisement(authUser2, store.getId())
+        );
+
+        assertEquals("계정의 권한이 없습니다.", exception.getMessage());
+    }
 }
