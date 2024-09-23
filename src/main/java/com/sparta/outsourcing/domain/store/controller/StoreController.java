@@ -5,7 +5,6 @@ import com.sparta.outsourcing.domain.store.dto.response.StoreResponseDto;
 import com.sparta.outsourcing.domain.store.service.StoreService;
 import com.sparta.outsourcing.domain.user.config.annotation.Auth;
 import com.sparta.outsourcing.domain.user.dto.AuthUser;
-import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -92,7 +91,6 @@ public class StoreController {
      * 가게의 광고를 등록합니다
      * @param authUser 유저의 정보를 받습니다
      * @param storeId 가게의 아이디를 받습니다
-     * @param content
      * @return
      */
     @PostMapping("/stores/{storeId}/advertisement")

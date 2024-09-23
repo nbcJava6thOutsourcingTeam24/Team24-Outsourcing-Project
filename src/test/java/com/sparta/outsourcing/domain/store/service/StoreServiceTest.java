@@ -125,7 +125,7 @@ class StoreServiceTest {
             storeService.createStore(authUser, storeRequestDto)
         );
 
-        assertEquals("가게는 최대 3개만 등록 가능합니다", exception.getMessage());
+        assertEquals("가게는 최대 3개만 등록 가능합니다.", exception.getMessage());
         verify(storeRepository, times(1)).findAllByOwnerIdAndStatusFalse(user.getId());
     }
 
@@ -205,7 +205,7 @@ class StoreServiceTest {
             storeService.updateStore(authUser, 1L, storeRequestDto)
         );
 
-        assertEquals("가게가 존재하지 않습니다", exception.getMessage());
+        assertEquals("가게가 존재하지 않습니다.", exception.getMessage());
     }
 
     @Test
@@ -282,7 +282,7 @@ class StoreServiceTest {
             storeService.getStoreList("가게")
         );
 
-        assertEquals("가게가 존재하지 않습니다", exception.getMessage());
+        assertEquals("가게가 존재하지 않습니다.", exception.getMessage());
     }
 
     @Test
@@ -330,7 +330,7 @@ class StoreServiceTest {
             storeService.getStore(1L)
         );
 
-        assertEquals("가게가 존재하지 않습니다", exception.getMessage());
+        assertEquals("가게가 존재하지 않습니다.", exception.getMessage());
     }
 
     @Test
@@ -341,7 +341,7 @@ class StoreServiceTest {
             storeService.getStore(1L)
         );
 
-        assertEquals("가게가 존재하지 않습니다", exception.getMessage());
+        assertEquals("가게가 존재하지 않습니다.", exception.getMessage());
     }
 
     @Test
@@ -391,7 +391,7 @@ class StoreServiceTest {
             storeService.deleteStore(authUser, store.getId())
         );
 
-        assertEquals("가게가 존재하지 않습니다", exception.getMessage());
+        assertEquals("가게가 존재하지 않습니다.", exception.getMessage());
     }
 
     @Test
@@ -470,7 +470,7 @@ class StoreServiceTest {
             storeService.createAdvertisement(authUser, store.getId())
         );
 
-        assertEquals("가게가 존재하지 않습니다", exception.getMessage());
+        assertEquals("가게가 존재하지 않습니다.", exception.getMessage());
     }
 
     @Test
