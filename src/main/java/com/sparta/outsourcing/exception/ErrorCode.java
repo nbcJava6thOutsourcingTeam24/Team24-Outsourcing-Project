@@ -32,10 +32,19 @@ public enum ErrorCode {
     INVALID_TRANSITION_FROM_ORDER_PREPARING_TO_CANCELLED(HttpStatus.BAD_REQUEST, "주문 준비 중 상태에서만 주문 취소가 가능합니다."),
     INVALID_TRANSITION_FROM_ORDER_DELIVERED_TO_CANCELLED(HttpStatus.BAD_REQUEST, "배달 완료 상태에서는 주문 취소가 불가능합니다."),
     ALREADY_ORDER_STATUS(HttpStatus.BAD_REQUEST, "이미 해당 주문 상태입니다."),
-    INVALID_OWNER_FOR_ORDER(HttpStatus.FORBIDDEN, "주문 상태를 변경할 권한이 없습니다. 해당 가게의 사장님만 주문 상태를 변경할 수 있습니다."),
+    INVALID_OWNER_FOR_ORDER(HttpStatus.FORBIDDEN, "주문 상태를 변경할 권한이 없습니다. 해당 가게의 사장님만 주문 상태를 변경할 수있습니다."),
     INVALID_ORDER_STATUS(HttpStatus.BAD_REQUEST, "주문 요청 상태가 올바르지 않습니다."),
     INVALID_ORDER_CREATION_FOR_OWNER(HttpStatus.FORBIDDEN, "사장님은 주문을 요청할 수 없습니다."),
-    ORDER_ACCESS_DENIED(HttpStatus.FORBIDDEN, "주문 접근 권한이 없습니다.");
+    ORDER_ACCESS_DENIED(HttpStatus.FORBIDDEN, "주문 접근 권한이 없습니다."),
+
+    REVIEW_ALREADY_EXISTS(HttpStatus.CONFLICT, "해당 주문에 이미 리뷰가 존재합니다."),
+    INVALID_ROLE_FOR_REVIEW_CREATION(HttpStatus.FORBIDDEN, "리뷰 작성 권한이 없습니다."),
+    ORDER_NOT_COMPLETED(HttpStatus.BAD_REQUEST, "배달 완료된 주문에만 리뷰를 작성할 수 있습니다."),
+    INVALID_REVIEW_ACCESS(HttpStatus.FORBIDDEN, "리뷰에 접근할 권한이 없습니다."),
+    REVIEW_NOT_FOUND(HttpStatus.NOT_FOUND, "리뷰가 존재하지 않습니다.");
+
+
+
 
     private final HttpStatus httpStatus;
     private final String message;
