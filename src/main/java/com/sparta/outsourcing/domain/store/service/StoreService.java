@@ -27,7 +27,7 @@ public class StoreService {
     public void createStore(AuthUser authUser, StoreRequestDto storeRequestDto) {
 
         User user = userRepository.findById(authUser.getId())
-                .orElseThrow(() -> new ApplicationException(ErrorCode.USER_NOT_FOUND));
+            .orElseThrow(() -> new ApplicationException(ErrorCode.USER_NOT_FOUND));
 
         if (authUser.getUserRole() != UserRole.OWNER) {
 //        if(user.getUserRole() != UserRole.OWNER) {
@@ -60,10 +60,22 @@ public class StoreService {
     }
 
 
-    public List<StoreResponseDto> getStoreList() {
-        List<Store> stores = storeRepository.findAllByStatusFalse();
+    public List<StoreResponseDto> getStoreList(String name) {
+        List<Store> stores = storeRepository.findStoreByName(name);
+
+        if (stores.isEmpty()) {
+            throw new ApplicationException(ErrorCode.STORE_NOT_FOUND);
+        }
+
         return stores.stream()
-            .map(StoreResponseDto::from)
+            .map(store -> new StoreResponseDto(
+                store.getId(),
+                store.getName(),
+                store.getOpenTime(),
+                store.getCloseTime(),
+                store.getMinPrice(),
+                store.getNotice()
+            ))
             .collect(Collectors.toList());
     }
 
@@ -75,7 +87,8 @@ public class StoreService {
             throw new ApplicationException(ErrorCode.STORE_NOT_FOUND);
         }
 
-        return StoreResponseDto.fromWithMenu(store);
+        return new StoreResponseDto(store.getId(), store.getName(),
+            store.getOpenTime(), store.getCloseTime(), store.getMinPrice(), store.getNotice());
     }
 
     public void deleteStore(AuthUser authUser, Long storeId) {
@@ -94,5 +107,23 @@ public class StoreService {
         }
 
         store.delete();
+    }
+
+    public void createAdvertisement(AuthUser authUser, Long storeId) {
+        User user = userRepository.findById(authUser.getId())
+            .orElseThrow(() -> new ApplicationException(ErrorCode.USER_NOT_FOUND));
+
+        Store store = storeRepository.findById(storeId)
+            .orElseThrow(() -> new ApplicationException(ErrorCode.STORE_NOT_FOUND));
+
+        if (store.isStatus()) {
+            throw new ApplicationException(ErrorCode.STORE_NOT_FOUND);
+        }
+
+        if (store.getOwner().getId()!= user.getId()) {
+            throw new ApplicationException(ErrorCode.USER_FORBIDDEN);
+        }
+
+        store.enableAdvertisement();
     }
 }
