@@ -1,6 +1,7 @@
 package com.sparta.outsourcing.domain.menu.entity;
 
-import com.sparta.outsourcing.domain.menu.dto.CreateMenuRequestDto;
+import com.sparta.outsourcing.domain.common.entity.Timestamped;
+import com.sparta.outsourcing.domain.menu.dto.request.CreateMenuRequestDto;
 import com.sparta.outsourcing.domain.store.entity.Store;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -9,29 +10,34 @@ import lombok.NoArgsConstructor;
 @Getter
 @Entity
 @NoArgsConstructor
-public class Menu {
+public class Menu extends Timestamped {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
     private Long price;
-    private boolean status = false;
+    private Boolean deleted = false;
 
     @ManyToOne
     @JoinColumn(name = "store_id")
     private Store store;
 
-//    public createMenu(String name, Long price, boolean status, Store store){
-//        this.name = name;
-//        this.price = price;
-//        this.status = status;
-//        this.store = store;
-//    }
-
+    // 메뉴 생성
     public Menu(CreateMenuRequestDto createMenuRequestDto, Store store) {
         this.name = createMenuRequestDto.getMenuname();
         this.price = createMenuRequestDto.getPrice();
         this.store = store;
+    }
+
+    // 메뉴 수정
+    public void updateMenu(CreateMenuRequestDto.UpdateMenuRequestDto updateMenuRequestDto) {
+        this.name = updateMenuRequestDto.getMenuname();
+        this.price = updateMenuRequestDto.getPrice();
+    }
+
+    // 메뉴 삭제
+    public void deleteMenu(){
+        this.deleted = true;
     }
 }
