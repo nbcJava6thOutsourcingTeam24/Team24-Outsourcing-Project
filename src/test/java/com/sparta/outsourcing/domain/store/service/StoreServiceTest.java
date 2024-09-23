@@ -7,6 +7,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import com.sparta.outsourcing.domain.menu.repository.MenuRepository;
 import com.sparta.outsourcing.domain.store.dto.request.StoreRequestDto;
 import com.sparta.outsourcing.domain.store.dto.response.StoreResponseDto;
 import com.sparta.outsourcing.domain.store.entity.Store;
@@ -38,6 +39,9 @@ class StoreServiceTest {
 
     @Mock
     private UserRepository userRepository;
+
+    @Mock
+    private MenuRepository menuRepository;
 
     @InjectMocks
     private StoreService storeService;
