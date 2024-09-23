@@ -50,4 +50,5 @@ public class Store extends Timestamped {
     public void delete() {
         this.status = true;
     }
+
 }
