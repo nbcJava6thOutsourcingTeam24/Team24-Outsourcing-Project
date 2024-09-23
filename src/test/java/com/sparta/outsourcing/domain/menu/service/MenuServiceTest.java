@@ -63,7 +63,7 @@ class MenuServiceTest {
 
 
         CreateMenuRequestDto createMenuRequestDto = new CreateMenuRequestDto("짜장면", 4000L);
-        AuthUser authUser = new AuthUser(user.getId(), user.getEmail());
+        AuthUser authUser = new AuthUser(user.getId(), user.getEmail(),UserRole.OWNER);
 
         Menu menu = new Menu(createMenuRequestDto, store);
         ReflectionTestUtils.setField(menu, "id",1L);
@@ -100,7 +100,7 @@ class MenuServiceTest {
 
         CreateMenuRequestDto.UpdateMenuRequestDto updateMenuRequestDto = new CreateMenuRequestDto.UpdateMenuRequestDto("볶음밥", 8000L);
 
-        AuthUser authUser = new AuthUser(user.getId(),"email");
+        AuthUser authUser = new AuthUser(user.getId(),"email", UserRole.OWNER);
 
         given(menuRepository.save(any(Menu.class))).willReturn(menu);
 
