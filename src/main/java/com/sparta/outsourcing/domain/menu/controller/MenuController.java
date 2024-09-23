@@ -1,7 +1,6 @@
 package com.sparta.outsourcing.domain.menu.controller;
 
-import com.sparta.outsourcing.domain.menu.dto.CreateMenuRequestDto;
-import com.sparta.outsourcing.domain.menu.dto.UpdateMenuRequestDto;
+import com.sparta.outsourcing.domain.menu.dto.request.CreateMenuRequestDto;
 import com.sparta.outsourcing.domain.menu.service.MenuService;
 import com.sparta.outsourcing.domain.user.config.annotation.Auth;
 import com.sparta.outsourcing.domain.user.dto.AuthUser;
@@ -47,7 +46,7 @@ public class MenuController {
             @Auth AuthUser authUser,
             @PathVariable(value = "storeId") Long storeId,
             @PathVariable(value = "menuId") Long menuId,
-            @RequestBody UpdateMenuRequestDto updateMenuRequestDto
+            @RequestBody CreateMenuRequestDto.UpdateMenuRequestDto updateMenuRequestDto
     ){
         menuService.updateMenu(storeId, menuId, updateMenuRequestDto, authUser);
         return new ResponseEntity<>("메뉴 수정이 완료되었습니다.", HttpStatus.OK);

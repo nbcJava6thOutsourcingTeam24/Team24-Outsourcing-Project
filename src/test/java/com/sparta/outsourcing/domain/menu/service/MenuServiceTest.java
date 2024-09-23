@@ -1,9 +1,8 @@
 package com.sparta.outsourcing.domain.menu.service;
 
-import com.sparta.outsourcing.domain.menu.dto.CreateMenuRequestDto;
-import com.sparta.outsourcing.domain.menu.dto.CreateMenuResponseDto;
-import com.sparta.outsourcing.domain.menu.dto.UpdateMenuRequestDto;
-import com.sparta.outsourcing.domain.menu.dto.UpdateMenuResponseDto;
+import com.sparta.outsourcing.domain.menu.dto.request.CreateMenuRequestDto;
+import com.sparta.outsourcing.domain.menu.dto.response.CreateMenuResponseDto;
+import com.sparta.outsourcing.domain.menu.dto.response.UpdateMenuResponseDto;
 import com.sparta.outsourcing.domain.menu.entity.Menu;
 import com.sparta.outsourcing.domain.menu.repository.MenuRepository;
 import com.sparta.outsourcing.domain.store.dto.request.StoreRequestDto;
@@ -28,7 +27,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 
 @ExtendWith(MockitoExtension.class)
-public class MenuServiceTest {
+class MenuServiceTest {
 
     @Mock
     MenuRepository menuRepository;
@@ -90,18 +89,16 @@ public class MenuServiceTest {
         ReflectionTestUtils.setField(storeRequestDto, "closeTime", LocalTime.of(23,30));
         ReflectionTestUtils.setField(storeRequestDto, "minPrice", 20000);
         Store store = new Store(storeRequestDto, user);
-//        ReflectionTestUtils.setField(store, "id", 1L);
         Long storeId = store.getId();
         given(storeRepository.findById(storeId)).willReturn(Optional.of(store));
 
         CreateMenuRequestDto createMenuRequestDto = new CreateMenuRequestDto("짬뽕", 7000L);
         Menu menu = new Menu(createMenuRequestDto, store);
-//        ReflectionTestUtils.setField(menu, "id", 1L);
         Long menuId = menu.getId();
 
         given(menuRepository.findByIdAndStoreId(menuId, storeId)).willReturn(Optional.of(menu));
 
-        UpdateMenuRequestDto updateMenuRequestDto = new UpdateMenuRequestDto("볶음밥", 8000L);
+        CreateMenuRequestDto.UpdateMenuRequestDto updateMenuRequestDto = new CreateMenuRequestDto.UpdateMenuRequestDto("볶음밥", 8000L);
 
         AuthUser authUser = new AuthUser(user.getId(),"email");
 

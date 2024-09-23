@@ -1,4 +1,4 @@
-package com.sparta.outsourcing.domain.menu.dto;
+package com.sparta.outsourcing.domain.menu.dto.response;
 
 import com.sparta.outsourcing.domain.menu.entity.Menu;
 import lombok.Getter;
@@ -6,21 +6,17 @@ import lombok.Getter;
 import java.time.LocalDateTime;
 
 @Getter
-public class CreateMenuResponseDto {
+public class UpdateMenuResponseDto {
 
     private Long id;
-    private Long storeId;
     private String menuname;
     private Long price;
-    private LocalDateTime createdAt;
+    private LocalDateTime modifiedAt;
 
-
-    public CreateMenuResponseDto(Menu menu){
+    public UpdateMenuResponseDto(Menu menu){
         this.id = menu.getId();
-        this.storeId = menu.getStore().getId();
         this.menuname = menu.getName();
         this.price = menu.getPrice();
-        this.createdAt = menu.getCreatedAt();
+        this.modifiedAt = menu.getModifiedAt();
     }
-
 }

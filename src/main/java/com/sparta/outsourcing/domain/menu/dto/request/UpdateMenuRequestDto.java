@@ -1,4 +1,4 @@
-package com.sparta.outsourcing.domain.menu.dto;
+package com.sparta.outsourcing.domain.menu.dto.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

@@ -1,9 +1,8 @@
 package com.sparta.outsourcing.domain.menu.service;
 
-import com.sparta.outsourcing.domain.menu.dto.CreateMenuRequestDto;
-import com.sparta.outsourcing.domain.menu.dto.CreateMenuResponseDto;
-import com.sparta.outsourcing.domain.menu.dto.UpdateMenuRequestDto;
-import com.sparta.outsourcing.domain.menu.dto.UpdateMenuResponseDto;
+import com.sparta.outsourcing.domain.menu.dto.request.CreateMenuRequestDto;
+import com.sparta.outsourcing.domain.menu.dto.response.CreateMenuResponseDto;
+import com.sparta.outsourcing.domain.menu.dto.response.UpdateMenuResponseDto;
 import com.sparta.outsourcing.domain.menu.entity.Menu;
 import com.sparta.outsourcing.domain.menu.repository.MenuRepository;
 import com.sparta.outsourcing.domain.store.entity.Store;
@@ -51,7 +50,7 @@ public class MenuService {
         return new CreateMenuResponseDto(menuRepository.save(menu));
     }
 
-    public UpdateMenuResponseDto updateMenu(Long storeId, Long menuId, UpdateMenuRequestDto updateMenuRequestDto, AuthUser authUser) {
+    public UpdateMenuResponseDto updateMenu(Long storeId, Long menuId, CreateMenuRequestDto.UpdateMenuRequestDto updateMenuRequestDto, AuthUser authUser) {
         // 유저 권한 확인
         User currentUser = userRepository.findById(authUser.getId())
                 .orElseThrow(() -> new ApplicationException(ErrorCode.USER_NOT_FOUND));

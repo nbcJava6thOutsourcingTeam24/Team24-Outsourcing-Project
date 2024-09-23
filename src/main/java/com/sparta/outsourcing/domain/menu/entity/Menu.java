@@ -1,8 +1,7 @@
 package com.sparta.outsourcing.domain.menu.entity;
 
 import com.sparta.outsourcing.domain.common.entity.Timestamped;
-import com.sparta.outsourcing.domain.menu.dto.CreateMenuRequestDto;
-import com.sparta.outsourcing.domain.menu.dto.UpdateMenuRequestDto;
+import com.sparta.outsourcing.domain.menu.dto.request.CreateMenuRequestDto;
 import com.sparta.outsourcing.domain.store.entity.Store;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -32,7 +31,7 @@ public class Menu extends Timestamped {
     }
 
     // 메뉴 수정
-    public void updateMenu(UpdateMenuRequestDto updateMenuRequestDto) {
+    public void updateMenu(CreateMenuRequestDto.UpdateMenuRequestDto updateMenuRequestDto) {
         this.name = updateMenuRequestDto.getMenuname();
         this.price = updateMenuRequestDto.getPrice();
     }

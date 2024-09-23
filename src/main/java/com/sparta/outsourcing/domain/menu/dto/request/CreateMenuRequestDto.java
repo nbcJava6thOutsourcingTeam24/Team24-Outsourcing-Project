@@ -1,4 +1,4 @@
-package com.sparta.outsourcing.domain.menu.dto;
+package com.sparta.outsourcing.domain.menu.dto.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -12,4 +12,13 @@ public class CreateMenuRequestDto {
     private String menuname;
     private Long price;
 
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class UpdateMenuRequestDto {
+
+        private String menuname;
+        private Long price;
+
+    }
 }
