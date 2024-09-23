@@ -27,9 +27,10 @@ public class StoreService {
     public void createStore(AuthUser authUser, StoreRequestDto storeRequestDto) {
 
         User user = userRepository.findById(authUser.getId())
-            .orElseThrow(() -> new ApplicationException(ErrorCode.USER_NOT_FOUND));
+                .orElseThrow(() -> new ApplicationException(ErrorCode.USER_NOT_FOUND));
 
-        if (user.getUserRole() != UserRole.OWNER) {
+        if (authUser.getUserRole() != UserRole.OWNER) {
+//        if(user.getUserRole() != UserRole.OWNER) {
             throw new ApplicationException(ErrorCode.USER_FORBIDDEN);
         }
 
