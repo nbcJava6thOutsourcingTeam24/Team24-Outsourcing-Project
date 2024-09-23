@@ -111,4 +111,32 @@ class MenuServiceTest {
         Assertions.assertThat(updateMenuResponseDto.getMenuname()).isEqualTo("볶음밥");
         Assertions.assertThat(updateMenuResponseDto.getPrice()).isEqualTo(8000L);
     }
+
+    @Test
+    void menu_정상적으로_삭제(){
+        //given
+        User user = new User("email", "password", UserRole.OWNER);
+        AuthUser authUser = new AuthUser(user.getId(), user.getEmail(), user.getUserRole());
+        given(userRepository.findById(user.getId())).willReturn(Optional.of(user));
+
+        StoreRequestDto storeRequestDto = new StoreRequestDto();
+        ReflectionTestUtils.setField(storeRequestDto, "name", "중화반점");
+        ReflectionTestUtils.setField(storeRequestDto, "openTime", LocalTime.of(13,30));
+        ReflectionTestUtils.setField(storeRequestDto, "closeTime", LocalTime.of(23,30));
+        ReflectionTestUtils.setField(storeRequestDto, "minPrice", 20000);
+        Store store = new Store(storeRequestDto, user);
+        Long storeId = store.getId();
+        given(storeRepository.findById(storeId)).willReturn(Optional.of(store));
+
+        CreateMenuRequestDto createMenuRequestDto = new CreateMenuRequestDto("짜장면", 6000L);
+        Menu menu = new Menu(createMenuRequestDto, store);
+        Long menuId = menu.getId();
+        given(menuRepository.findByIdAndStoreId(menuId, storeId)).willReturn(Optional.of(menu));
+
+        //when
+        menuService.deleteMenu(storeId, menuId, authUser);
+
+        //then
+        org.junit.jupiter.api.Assertions.assertEquals(true, menu.getDeleted());
+    }
 }
