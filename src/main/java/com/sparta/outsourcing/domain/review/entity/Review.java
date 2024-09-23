@@ -31,7 +31,7 @@ public class Review extends Timestamped {
     private Integer rating;
 
     @Column(length = 250)
-    private String contents;
+    private String content;
     private LocalDateTime createdDate;
 
 
