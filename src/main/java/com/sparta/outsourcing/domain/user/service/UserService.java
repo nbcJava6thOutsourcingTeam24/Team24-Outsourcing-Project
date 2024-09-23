@@ -36,7 +36,7 @@ public class UserService {
     public String signIn(String email, String password) {
         User user = userRepository.findByEmailOrElseThrow(email);
         if(user.isDeleted()){
-            throw new IllegalArgumentException("이미 탈퇴한 사용자 입니다.");
+            throw new IllegalArgumentException("로그인할 수 없습니다.");
         }
         if(!passwordEncoder.matches(password, user.getPassword())){
             throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
