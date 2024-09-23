@@ -24,6 +24,7 @@ public class User extends Timestamped {
     private boolean deleted;
 
     @Enumerated(EnumType.STRING)
+    @Column(name = "user_role")
     private UserRole userRole;
 
     public User(String email, String password, UserRole userRole) {

@@ -1,0 +1,62 @@
+@BASE_URL=http://localhost:8080
+
+@USER_TOKEN=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwicm9sZSI6IlVTRVIiLCJleHAiOjE3Mjc2MzU0ODcsImlhdCI6MTcyNzAzMDY4N30.AYxMEDNiZXV_IMc52QhNfushI0X0oiV0La2B5gbkbj4
+
+@OWNER_TOKEN=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyIiwicm9sZSI6Ik9XTkVSIiwiZXhwIjoxNzI3NjM1NTAyLCJpYXQiOjE3MjcwMzA3MDJ9.qHFmaKZiMz85ZKhY3mZbivWz62PlW7G5HmQjbC-qVBU
+
+@EXPIRED_AUTH_TOKEN=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwicm9sZSI6IlVTRVIiLCJleHAiOjE3MjY5NjgyNjMsImlhdCI6MTcyNjk2NDY2M30.gIojYj5sXfrJwqyteVWIAF07G1YnqMZZj8jo1ceASpI
+
+### 로그 레벨 변경 - INFO , DEBUG , ERROR , WARN , TRACE
+POST {{BASE_URL}}/log-level/set?level=INFO
+Content-Type: application/json
+Authorization: Bearer {{USER_TOKEN}}
+
+> {%
+    client.test("Status code is 200", function() {
+        client.assert(response.status === 200);
+    });
+%}
+
+### 로그 레벨 변경 - INFO , DEBUG , ERROR , WARN , TRACE
+POST {{BASE_URL}}/log-level/set?level=DEBUG
+Content-Type: application/json
+Authorization: Bearer {{USER_TOKEN}}
+
+> {%
+    client.test("Status code is 200", function() {
+        client.assert(response.status === 200);
+    });
+%}
+
+### 로그 레벨 변경 - INFO , DEBUG , ERROR , WARN , TRACE
+POST {{BASE_URL}}/log-level/set?level=ERROR
+Content-Type: application/json
+Authorization: Bearer {{USER_TOKEN}}
+
+> {%
+    client.test("Status code is 200", function() {
+        client.assert(response.status === 200);
+    });
+%}
+
+### 로그 레벨 변경 - INFO , DEBUG , ERROR , WARN , TRACE
+POST {{BASE_URL}}/log-level/set?level=WARN
+Content-Type: application/json
+Authorization: Bearer {{USER_TOKEN}}
+
+> {%
+    client.test("Status code is 200", function() {
+        client.assert(response.status === 200);
+    });
+%}
+
+### 로그 레벨 변경 - INFO , DEBUG , ERROR , WARN , TRACE
+POST {{BASE_URL}}/log-level/set?level=TRACE
+Content-Type: application/json
+Authorization: Bearer {{USER_TOKEN}}
+
+> {%
+    client.test("Status code is 200", function() {
+        client.assert(response.status === 200);
+    });
+%}
