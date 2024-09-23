@@ -1,5 +1,7 @@
 package com.sparta.outsourcing.exception;
 
+import org.hibernate.sql.Delete;
+
 public enum ErrorCode {
 
     BAD_REQUEST(400, "잘못된 요청입니다."),
@@ -12,6 +14,7 @@ public enum ErrorCode {
     PASSWORD_NOT_MATCH(404, "비밀번호가 일치하지 않습니다"),
     USER_NOT_FOUND(404, "유저가 존재하지 않습니다"),
     STORE_NOT_FOUND(404, "가게가 존재하지 않습니다"),
+    MENU_NOT_FOUND(404, "해당 메뉴가 존재하지 않습니다."),
 
     ALREADY_USER_EXIST(409, "이미 존재하는 회원입니다"),
     PASSWORD_SAME_OLD(409, "기존 비밀번호와 동일합니다");

@@ -2,9 +2,9 @@ package com.sparta.outsourcing.domain.user.controller;
 
 import com.sparta.outsourcing.domain.user.config.annotation.Auth;
 import com.sparta.outsourcing.domain.user.dto.AuthUser;
-import com.sparta.outsourcing.domain.user.dto.SignInRequestDto;
-import com.sparta.outsourcing.domain.user.dto.SignUpRequestDto;
-import com.sparta.outsourcing.domain.user.dto.UserDeleteDto;
+import com.sparta.outsourcing.domain.user.dto.request.SignInRequestDto;
+import com.sparta.outsourcing.domain.user.dto.request.SignUpRequestDto;
+import com.sparta.outsourcing.domain.user.dto.request.UserDeleteDto;
 import com.sparta.outsourcing.domain.user.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
