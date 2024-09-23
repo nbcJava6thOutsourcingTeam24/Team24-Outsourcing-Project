@@ -4,9 +4,13 @@ package com.sparta.outsourcing.domain.user.dto.request;
 import com.sparta.outsourcing.domain.user.enums.UserRole;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
 @Getter
+@AllArgsConstructor
+@RequiredArgsConstructor
 public class SignUpRequestDto {
 
     @NotBlank
