@@ -61,7 +61,8 @@ class StoreServiceTest {
 
         when(userRepository.findById(user.getId())).thenReturn(Optional.of(user));
 
-        when(storeRepository.findAllByOwnerIdAndStatusFalse(user.getId())).thenReturn(Collections.emptyList());
+        when(storeRepository.findAllByOwnerIdAndStatusFalse(user.getId())).thenReturn(
+            Collections.emptyList());
 
         // when
         storeService.createStore(authUser, storeRequestDto);
@@ -116,7 +117,8 @@ class StoreServiceTest {
 
         when(userRepository.findById(user.getId())).thenReturn(Optional.of(user));
 
-        when(storeRepository.findAllByOwnerIdAndStatusFalse(user.getId())).thenReturn(Collections.nCopies(3, new Store()));
+        when(storeRepository.findAllByOwnerIdAndStatusFalse(user.getId())).thenReturn(
+            Collections.nCopies(3, new Store()));
 
         // when - then
         ApplicationException exception = assertThrows(ApplicationException.class, () ->
@@ -249,10 +251,14 @@ class StoreServiceTest {
         User user = new User("user@example.com", "1234", UserRole.OWNER);
         ReflectionTestUtils.setField(user, "id", 1L);
 
-        Store store1 = new Store(new StoreRequestDto("가게", LocalTime.parse("12:00"), LocalTime.parse("18:00"), 18000, "공지1"), user);
+        Store store1 = new Store(
+            new StoreRequestDto("가게", LocalTime.parse("12:00"), LocalTime.parse("18:00"), 18000,
+                "공지1"), user);
         ReflectionTestUtils.setField(store1, "id", 1L);
 
-        Store store2 = new Store(new StoreRequestDto("가게", LocalTime.parse("13:00"), LocalTime.parse("20:00"), 20000, "공지2"), user);
+        Store store2 = new Store(
+            new StoreRequestDto("가게", LocalTime.parse("13:00"), LocalTime.parse("20:00"), 20000,
+                "공지2"), user);
         ReflectionTestUtils.setField(store2, "id", 2L);
 
         List<Store> stores = Arrays.asList(store1, store2);
@@ -286,7 +292,9 @@ class StoreServiceTest {
         User user = new User("user@exampel.com", "1234", UserRole.OWNER);
         ReflectionTestUtils.setField(user, "id", 1L);
 
-        Store store = new Store(new StoreRequestDto("가게", LocalTime.parse("12:00"), LocalTime.parse("18:00"), 18000, "공지"), user);
+        Store store = new Store(
+            new StoreRequestDto("가게", LocalTime.parse("12:00"), LocalTime.parse("18:00"), 18000,
+                "공지"), user);
         ReflectionTestUtils.setField(store, "id", 1L);
 
         when(storeRepository.findById(store.getId())).thenReturn(Optional.of(store));
@@ -304,12 +312,14 @@ class StoreServiceTest {
 
     @Test
     @DisplayName("가게 단건 조회 테스트 - 실패 - 가게폐쇄")
-    void getStore_fail_storeIsClosed(){
+    void getStore_fail_storeIsClosed() {
         // given
         User user = new User("user@exampel.com", "1234", UserRole.OWNER);
         ReflectionTestUtils.setField(user, "id", 1L);
 
-        Store store = new Store(new StoreRequestDto("가게", LocalTime.parse("12:00"), LocalTime.parse("18:00"), 18000, "공지"), user);
+        Store store = new Store(
+            new StoreRequestDto("가게", LocalTime.parse("12:00"), LocalTime.parse("18:00"), 18000,
+                "공지"), user);
         ReflectionTestUtils.setField(store, "id", 1L);
         ReflectionTestUtils.setField(store, "status", true);
 
@@ -325,7 +335,7 @@ class StoreServiceTest {
 
     @Test
     @DisplayName("\"가게 단건 조회 테스트 - 실패 - 가게가 없을때")
-    void getStore_fail_storeNotFound(){
+    void getStore_fail_storeNotFound() {
         //when - then
         ApplicationException exception = assertThrows(ApplicationException.class, () ->
             storeService.getStore(1L)
@@ -333,4 +343,83 @@ class StoreServiceTest {
 
         assertEquals("가게가 존재하지 않습니다", exception.getMessage());
     }
+
+    @Test
+    @DisplayName("가게 삭제 테스트 - 성공")
+    void deleteStore_success() {
+        // given
+        User user = new User("user@example.com", "1234", UserRole.OWNER);
+        ReflectionTestUtils.setField(user, "id", 1L);
+
+        AuthUser authUser = new AuthUser(user.getId(), user.getEmail(), user.getUserRole());
+
+        Store store = new Store(
+            new StoreRequestDto("가게", LocalTime.parse("12:00"), LocalTime.parse("18:00"), 18000,
+                "공지"), user);
+        ReflectionTestUtils.setField(store, "id", 1L);
+
+        when(userRepository.findById((user.getId()))).thenReturn(Optional.of(user));
+        when(storeRepository.findById(store.getId())).thenReturn(Optional.of(store));
+
+        // when
+        storeService.deleteStore(authUser, store.getId());
+
+        // then
+        assertEquals(true, store.isStatus());
+    }
+
+    @Test
+    @DisplayName("가게 삭제 테스트 - 실패 - 이미 영업종료된 가게")
+    void deleteStore_fail_notFoundStore() {
+        // given
+        User user = new User("user@example.com", "1234", UserRole.OWNER);
+        ReflectionTestUtils.setField(user, "id", 1L);
+
+        AuthUser authUser = new AuthUser(user.getId(), user.getEmail(), user.getUserRole());
+
+        Store store = new Store(
+            new StoreRequestDto("가게", LocalTime.parse("12:00"), LocalTime.parse("18:00"), 18000,
+                "공지"), user);
+        ReflectionTestUtils.setField(store, "id", 1L);
+        ReflectionTestUtils.setField(store, "status", true);
+
+        when(userRepository.findById((user.getId()))).thenReturn(Optional.of(user));
+        when(storeRepository.findById(store.getId())).thenReturn(Optional.of(store));
+
+        //when - then
+        ApplicationException exception = assertThrows(ApplicationException.class, () ->
+            storeService.deleteStore(authUser, store.getId())
+        );
+
+        assertEquals("가게가 존재하지 않습니다", exception.getMessage());
+    }
+
+    @Test
+    @DisplayName("가게 삭제 테스트 - 실패 - 다른 유저가 삭제하려고 시도할때")
+    void deleteStore_fail_anotherUser() {
+        // given
+        User user1 = new User("user@example.com", "1234", UserRole.OWNER);
+        ReflectionTestUtils.setField(user1, "id", 1L);
+
+        User user2 = new User("user@example.com", "1234", UserRole.OWNER);
+        ReflectionTestUtils.setField(user2, "id", 2L);
+
+        AuthUser authUser2 = new AuthUser(user2.getId(), user2.getEmail(), user2.getUserRole());
+
+        Store store = new Store(
+            new StoreRequestDto("가게", LocalTime.parse("12:00"), LocalTime.parse("18:00"), 18000,
+                "공지"), user1);
+        ReflectionTestUtils.setField(store, "id", 1L);
+
+        when(userRepository.findById((user2.getId()))).thenReturn(Optional.of(user2));
+        when(storeRepository.findById(store.getId())).thenReturn(Optional.of(store));
+
+        //when - then
+        ApplicationException exception = assertThrows(ApplicationException.class, () ->
+            storeService.deleteStore(authUser2, store.getId())
+        );
+
+        assertEquals("계정의 권한이 없습니다.", exception.getMessage());
+    }
+
 }
