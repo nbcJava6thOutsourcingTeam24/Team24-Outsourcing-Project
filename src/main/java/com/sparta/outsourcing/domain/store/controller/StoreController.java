@@ -5,7 +5,6 @@ import com.sparta.outsourcing.domain.store.dto.response.StoreResponseDto;
 import com.sparta.outsourcing.domain.store.service.StoreService;
 import com.sparta.outsourcing.domain.user.config.annotation.Auth;
 import com.sparta.outsourcing.domain.user.dto.AuthUser;
-import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -17,6 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -59,8 +59,8 @@ public class StoreController {
      * @return 가게 목록의 정보와 메뉴목록을 반환합니다.
      */
     @GetMapping("/stores")
-    public ResponseEntity<List<StoreResponseDto>> getStoreList() {
-        List<StoreResponseDto> responseList = storeService.getStoreList();
+    public ResponseEntity<List<StoreResponseDto>> getStoreList(@RequestParam String name) {
+        List<StoreResponseDto> responseList = storeService.getStoreList(name);
         return new ResponseEntity<>(responseList, HttpStatus.OK);
     }
 
@@ -85,5 +85,17 @@ public class StoreController {
     public ResponseEntity<String> deleteStore(@Auth AuthUser authUser, @PathVariable Long storeId) {
         storeService.deleteStore(authUser, storeId);
         return new ResponseEntity<>("가게 폐업처리가 완료되었습니다.", HttpStatus.OK);
+    }
+
+    /**
+     * 가게의 광고를 등록합니다
+     * @param authUser 유저의 정보를 받습니다
+     * @param storeId 가게의 아이디를 받습니다
+     * @return
+     */
+    @PostMapping("/stores/{storeId}/advertisement")
+    public ResponseEntity<String> createAdvertisement(@Auth AuthUser authUser, @PathVariable Long storeId) {
+        storeService.createAdvertisement(authUser, storeId);
+        return new ResponseEntity<>("광고 등록이 완료되었습니다.", HttpStatus.CREATED);
     }
 }
