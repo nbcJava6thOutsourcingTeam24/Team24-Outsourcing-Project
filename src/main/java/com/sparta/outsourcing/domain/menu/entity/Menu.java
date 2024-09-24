@@ -19,7 +19,7 @@ public class Menu extends Timestamped {
     private Long price;
     private Boolean deleted = false;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "store_id")
     private Store store;
 
