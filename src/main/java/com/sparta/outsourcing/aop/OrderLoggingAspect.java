@@ -92,18 +92,23 @@ public class OrderLoggingAspect {
     }
 
     // 주문 조회 후 로그
-    @AfterReturning(pointcut = "execution(* com.sparta.outsourcing.domain.order.service.OrderService.getOrderById(..))", returning = "result")
+    @AfterReturning(pointcut = "execution(* com.sparta.outsourcing.domain.order.service.OrderService.getOrderForUser(..)) || execution(* com.sparta.outsourcing.domain.order.service.OrderService.getOrderByOwner(..))", returning = "result")
     public void logAfterOrderRetrieval(JoinPoint joinPoint, Object result) {
-        OrderResponseDto orderResponse = (OrderResponseDto) result;
-        Long orderId = (Long) joinPoint.getArgs()[0];
+        Long orderId = (Long) joinPoint.getArgs()[0]; // 첫 번째 인자로 주문 ID 추출
 
+        // JWT 토큰에서 유저 정보 추출
         Claims claims = parseJwtToken(extractToken(getRequest()));
         Long userId = extractUserId(claims);
         String userRole = extractUserRole(claims);
 
-        LogUtility.log(LogLevel.INFO, String.format("[주문 조회 완료] 메서드: OrderService.getOrderById(..), 기능: '주문 조회', 요청자: 유저 ID: %d, 권한: %s, 주문 ID: %d, 조회 시간: %s",
-                userId, userRole, orderId, orderResponse.getId(), LocalDateTime.now()));
+        // 메서드명이 getOrderForUser 또는 getOrderByOwner에 따라 다르게 로그 처리
+        String methodName = joinPoint.getSignature().getName();
+        String featureName = methodName.equals("getOrderForUser") ? "고객 주문 조회" : "사장님 주문 조회";
+
+        LogUtility.log(LogLevel.INFO, String.format("[주문 조회 완료] 메서드: %s, 기능: '%s', 요청자: 유저 ID: %d, 권한: %s, 주문 ID: %d, 조회 시간: %s",
+                methodName, featureName, userId, userRole, orderId, LocalDateTime.now()));
     }
+
 
     // 비즈니스 로직 실행 및 에러 핸들링
     private Object proceedWithExecution(ProceedingJoinPoint joinPoint, String functionality, String actorInfo, LocalDateTime startTime, String methodName, String storeId) throws Throwable {
