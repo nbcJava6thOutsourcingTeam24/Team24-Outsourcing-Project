@@ -1,4 +1,4 @@
-package com.sparta.outsourcing.user;
+package com.sparta.outsourcing.domain.user;
 
 
 import com.sparta.outsourcing.domain.user.config.auth.JwtUtil;
@@ -12,11 +12,13 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
+
+import java.util.Collections;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.BDDMockito.given;
 
 @ExtendWith(MockitoExtension.class)
@@ -54,6 +56,7 @@ public class UserServiceTest {
         //then
         assertEquals("token", userSignup);
 
+
         // 사용자 권한이 OWNER 일때
         UserRole userRoleOwner = UserRole.OWNER;
         User Owner = new User(email, encodedPassword, userRoleOwner);
@@ -66,6 +69,33 @@ public class UserServiceTest {
         //then
         assertEquals("token", OwnerSignup);
     }
+
+    @Test
+    void 이미_가입한_사용자(){
+        String email = "test@test.com";
+        String password = "password";
+        String encodedPassword = passwordEncoder.encode(password);
+        UserRole userRoleUser = UserRole.USER;
+        User user = new User(email, encodedPassword, userRoleUser);
+
+        given(userRepository.findByEmailAndDeletedFalse(email)).willReturn(Optional.of(user));
+
+        assertThrows(IllegalArgumentException.class, () -> userService.signUp(email, password, userRoleUser));
+    }
+
+    @Test
+    void 이미_탈퇴한_사용자(){
+        String email = "test@test.com";
+        String password = "password";
+        String encodedPassword = passwordEncoder.encode(password);
+        UserRole userRoleUser = UserRole.USER;
+        User user = new User(email, encodedPassword, userRoleUser);
+
+        given(userRepository.findByEmailAndDeletedTrue(email)).willReturn(Optional.of(user));
+
+        assertThrows(IllegalArgumentException.class, () -> userService.signUp(email, password, userRoleUser));
+    }
+
 
     @Test
     void 회원_로그인_성공(){
@@ -102,6 +132,32 @@ public class UserServiceTest {
     }
 
     @Test
+    void 로그인_할수없음(){
+        String email = "test@test.com";
+        String password = "password";
+        String encodedPassword = passwordEncoder.encode(password);
+        User user = new User(email, encodedPassword, UserRole.USER);
+        user.deleted();
+
+        given(userRepository.findByEmailOrElseThrow(email)).willReturn(user);
+
+        assertThrows(IllegalArgumentException.class, () -> userService.signIn(email, password));
+    }
+
+    @Test
+    void 비밀번호_불일치(){
+        String email = "test@test.com";
+        String password = "password";
+        String encodedPassword = passwordEncoder.encode(password);
+        User user = new User(email, encodedPassword, UserRole.USER);
+
+        given(userRepository.findByEmailOrElseThrow(email)).willReturn(user);
+        given(passwordEncoder.matches(password, user.getPassword())).willReturn(false);
+
+        assertThrows(IllegalArgumentException.class, () -> userService.signIn(email, password));
+    }
+
+    @Test
     void 회원_탈퇴_성공(){
         Long userId = 1L;
         String password = "password";
@@ -118,4 +174,32 @@ public class UserServiceTest {
         //then
         assertTrue(user.isDeleted());
     }
+
+    @Test
+    void 이미탈퇴한_사용자(){
+        Long userId = 1L;
+        String password = "password";
+        String encodedPassword = passwordEncoder.encode(password);
+        User user = new User("test@test.com", encodedPassword, UserRole.USER);
+
+        user.deleted();
+
+        given(userRepository.findByIdOrElseThrow(userId)).willReturn(user);
+
+        assertThrows(IllegalArgumentException.class, () -> userService.delete(userId, password));
+    }
+
+    @Test
+    void 비밀번호_일치하지_않음(){
+        Long userId = 1L;
+        String password = "password";
+        String encodedPassword = passwordEncoder.encode(password);
+        User user = new User("test@test.com", encodedPassword, UserRole.USER);
+
+        given(userRepository.findByIdOrElseThrow(userId)).willReturn(user);
+        given(passwordEncoder.matches(password, user.getPassword())).willReturn(false);
+
+        assertThrows(IllegalArgumentException.class, () -> userService.delete(userId, password));
+    }
+
 }
