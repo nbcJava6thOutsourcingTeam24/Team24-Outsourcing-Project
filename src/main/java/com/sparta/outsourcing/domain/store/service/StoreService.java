@@ -34,7 +34,6 @@ public class StoreService {
             .orElseThrow(() -> new ApplicationException(ErrorCode.USER_NOT_FOUND));
 
         if (authUser.getUserRole() != UserRole.OWNER) {
-//        if(user.getUserRole() != UserRole.OWNER) {
             throw new ApplicationException(ErrorCode.USER_FORBIDDEN);
         }
 
@@ -120,6 +119,7 @@ public class StoreService {
         }
 
         store.delete();
+        menuRepository.deleteAllByStoreId(storeId);
     }
 
     public void createAdvertisement(AuthUser authUser, Long storeId) {
