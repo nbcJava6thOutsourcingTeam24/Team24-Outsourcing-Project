@@ -103,6 +103,7 @@ public class StoreService {
             store.getOpenTime(), store.getCloseTime(), store.getMinPrice(), store.getNotice(), menuResponseDtoList);
     }
 
+    @Transactional
     public void deleteStore(AuthUser authUser, Long storeId) {
         User user = userRepository.findById(authUser.getId())
             .orElseThrow(() -> new ApplicationException(ErrorCode.USER_NOT_FOUND));
@@ -119,9 +120,10 @@ public class StoreService {
         }
 
         store.delete();
-        menuRepository.deleteAllByStoreId(storeId);
+        menuRepository.updateMenu(storeId);
     }
 
+    @Transactional
     public void createAdvertisement(AuthUser authUser, Long storeId) {
         User user = userRepository.findById(authUser.getId())
             .orElseThrow(() -> new ApplicationException(ErrorCode.USER_NOT_FOUND));
