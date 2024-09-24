@@ -62,4 +62,8 @@ public class Orders extends Timestamped {
     public void setTotalPrice(Integer totalPrice) {
         this.totalPrice = totalPrice;
     }
+
+    public void setId(long l) {
+        this.id = id;
+    }
 }
