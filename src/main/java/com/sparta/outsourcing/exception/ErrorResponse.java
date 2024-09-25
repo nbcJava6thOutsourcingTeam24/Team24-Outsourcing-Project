@@ -11,7 +11,6 @@ public class ErrorResponse {
 
     private final HttpStatus status;
     private final String message;
-    private final Map<String, String> validations = new HashMap<>();
 
     private ErrorResponse(final HttpStatus status, final String message) {
         this.status = status;
@@ -20,10 +19,6 @@ public class ErrorResponse {
 
     public static ErrorResponse of(final HttpStatus status, final String message) {
         return new ErrorResponse(status, message);
-    }
-
-    public void addValidation(final String fieldName, final String message) {
-        validations.put(fieldName, message);
     }
 
     // 확장성을 고려하여 주석 처리 추후, 상태 코드(int)까지 필요하여 반환하고 싶다면 아래 메서드를 추가

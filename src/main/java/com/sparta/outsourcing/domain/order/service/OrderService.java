@@ -19,7 +19,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalTime;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -44,11 +43,13 @@ public class OrderService {
 
         validateOrderCreationRequest(orderRequestDto);
 
+        validateStoreOpenStatus(orderRequestDto.getStoreId());
+
         Store store = getValidStore(orderRequestDto.getStoreId());
         User customer = getValidCustomer(orderRequestDto.getCustomerId());
         Menu menu = getValidMenu(orderRequestDto.getMenuId());
 
-        validateOrderAmountAndStoreStatus(orderRequestDto.getTotalPrice(), store);
+        validateOrderAmount(orderRequestDto.getTotalPrice(), store);
 
         Orders order = new Orders();
         order.setCustomer(customer);
@@ -88,18 +89,37 @@ public class OrderService {
     }
 
     // 주문 금액 및 가게 상태 검증 메서드 =====================================================================
-    private void validateOrderAmountAndStoreStatus(Integer totalPrice, Store store) {
-
-       // 주문 금액이 최소 주문 금액보다 작은 경우 예외 처리
+    private void validateOrderAmount(Integer totalPrice, Store store) {
+        // 주문 금액이 최소 주문 금액보다 작은 경우 예외 처리
         if (totalPrice < store.getMinPrice()) {
             throw new ApplicationException(ErrorCode.MINIMUM_ORDER_AMOUNT_NOT_MET);
         }
 
-        // 가게가 영업 중이 아닌 경우 예외 처리
+    }
+
+    // 가게 영업 시간 검증 메서드 ==============================================================================
+    public void validateStoreOpenStatus(Long storeId) {
+        Store store = storeRepository.findById(storeId)
+                .orElseThrow(() -> new ApplicationException(ErrorCode.STORE_NOT_FOUND));
         LocalTime now = LocalTime.now();
-        if (now.isBefore(store.getOpenTime()) || now.isAfter(store.getCloseTime())) {
+        LocalTime openTime = store.getOpenTime();
+        LocalTime closeTime = store.getCloseTime();
+
+        // 자정 넘는 경우 처리
+        boolean isOpen;
+
+        if (openTime.isBefore(closeTime)) {
+            // 같은 날에 영업 종료
+            isOpen = (now.isAfter(openTime) || now.equals(openTime)) && now.isBefore(closeTime);
+        } else {
+            // 다음 날에 영업 종료 (자정을 넘김)
+            isOpen = (now.isAfter(openTime) || now.equals(openTime)) || now.isBefore(closeTime);
+        }
+
+        if (!isOpen) {
             throw new ApplicationException(ErrorCode.STORE_CLOSED);
         }
+
 
     }
 
@@ -179,11 +199,14 @@ public class OrderService {
                 throw new ApplicationException(ErrorCode.INVALID_TRANSITION_FROM_ORDER_PREPARING_TO_CANCELLED);
             }
 
-            if (order.getStatus() == OrderStatus.ORDER_ON_THE_WAY || order.getStatus() == OrderStatus.ORDER_DELIVERED) {
+            if (order.getStatus() == OrderStatus.ORDER_ON_THE_WAY) {
                 throw new ApplicationException(ErrorCode.INVALID_TRANSITION_FROM_ORDER_DELIVERED_TO_CANCELLED);
             }
 
-            throw new ApplicationException(ErrorCode.INVALID_ORDER_STATUS_TRANSITION);
+            if (order.getStatus() == OrderStatus.ORDER_DELIVERED) {
+                throw new ApplicationException(ErrorCode.INVALID_TRANSITION_FROM_ORDER_DELIVERED_TO_CANCELLED);
+            }
+
         }
 
         // 주문 상태 변경 동작에 어긋날 경우 예외 처리
@@ -201,7 +224,7 @@ public class OrderService {
             throw new ApplicationException(ErrorCode.ORDER_ACCESS_DENIED); // 접근 권한 없음
         }
 
-        // 권한 검증: 고객만 자신의 주문을 조회할 수 있음
+        // 권한 검증: 고객의 경우에만 주문 조회 가능
         if (userRole != UserRole.USER) {
             throw new ApplicationException(ErrorCode.ORDER_ACCESS_DENIED); // 권한 없음 예외 처리
         }
@@ -223,19 +246,23 @@ public class OrderService {
         return mapToResponseDto(order);
     }
 
-
     // 주문 엔티티 -> 주문 응답 DTO 매핑 ======================================================================
     private OrderResponseDto mapToResponseDto(Orders order) {
         OrderResponseDto responseDto = new OrderResponseDto();
         responseDto.setId(order.getId());
         responseDto.setCustomerId(order.getCustomer().getId());
+        responseDto.setCustomerEmail(order.getCustomer().getEmail());
         responseDto.setStoreId(order.getStore().getId());
+        responseDto.setStoreName(order.getStore().getName());
         responseDto.setMenuId(order.getMenu().getId());
+        responseDto.setMenuName(order.getMenu().getName());
+        responseDto.setMenuPrice(order.getMenu().getPrice());
         responseDto.setStatus(order.getStatus());
         responseDto.setTotalPrice(order.getTotalPrice());
 
         // 취소 가능 여부 확인
-        responseDto.setCanCancel(canUserCancelOrder(order));
+        responseDto.setCanUserCancel(canUserCancelOrder(order));
+        responseDto.setCanOwnerCancel(canOwnerCancelOrder(order));
 
         // 상태 변경 가능 목록 설정
         responseDto.setAvailableStatusChanges(getAvailableStatusChanges(order.getStatus()));
@@ -246,6 +273,11 @@ public class OrderService {
     // 유저가 취소할 수 있는지 확인
     private boolean canUserCancelOrder(Orders order) {
         return order.getStatus() == OrderStatus.ORDER_PLACED || order.getStatus() == OrderStatus.ORDER_CONFIRMED;
+    }
+
+    // 사장님이 취소할 수 있는지 확인
+    private boolean canOwnerCancelOrder(Orders order) {
+        return order.getStatus() == OrderStatus.ORDER_PLACED || order.getStatus() == OrderStatus.ORDER_CONFIRMED || order.getStatus() == OrderStatus.ORDER_PREPARING;
     }
 
     // 상태 전환 규칙을 미리 정의한 Map

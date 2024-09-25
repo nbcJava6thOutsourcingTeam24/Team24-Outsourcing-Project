@@ -37,7 +37,7 @@ public class Orders extends Timestamped {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "menu_id")
     private Menu menu;
-    
+
     @Enumerated(EnumType.STRING)
     private OrderStatus status;
 
@@ -61,9 +61,5 @@ public class Orders extends Timestamped {
 
     public void setTotalPrice(Integer totalPrice) {
         this.totalPrice = totalPrice;
-    }
-
-    public void setId(long l) {
-        this.id = id;
     }
 }

@@ -9,18 +9,19 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-@AllArgsConstructor
 @RestController
 @RequestMapping("/api/orders")
+@AllArgsConstructor
 public class OrderController {
 
     private final OrderService orderService;
 
     @PostMapping
-    public ResponseEntity<OrderResponseDto> createOrder(@RequestBody OrderRequestDto orderRequestDto, @RequestAttribute("userRole") String userRoleStr) {
-        UserRole userRole = UserRole.valueOf(userRoleStr);
+    public ResponseEntity<OrderResponseDto> createOrder(
+            @RequestBody OrderRequestDto orderRequestDto,
+            @RequestAttribute("role") UserRole userRole) {
         OrderResponseDto orderResponseDto = orderService.createOrder(orderRequestDto, userRole);
-        return ResponseEntity.ok(orderResponseDto);
+        return ResponseEntity.status(201).body(orderResponseDto); // 201 Created
     }
 
     @PutMapping("/{orderId}/status")
@@ -28,24 +29,26 @@ public class OrderController {
             @PathVariable Long orderId,
             @RequestParam OrderStatus status,
             @RequestAttribute("userId") Long userId,
-            @RequestAttribute("userRole") String userRoleStr) {
-
-        UserRole userRole = UserRole.valueOf(userRoleStr);
-
+            @RequestAttribute("role") UserRole userRole) {
         OrderResponseDto orderResponseDto = orderService.updateOrderStatus(orderId, status, userRole, userId);
         return ResponseEntity.ok(orderResponseDto);
     }
 
     @GetMapping("/user/{orderId}")
-    public ResponseEntity<OrderResponseDto> getOrderForUser(@PathVariable Long orderId, @RequestParam Long userId, @RequestAttribute("userRole") UserRole userRole) {
+    public ResponseEntity<OrderResponseDto> getOrderForUser(
+            @PathVariable Long orderId,
+            @RequestAttribute("userId") Long userId,
+            @RequestAttribute("role") UserRole userRole) {
         OrderResponseDto orderResponseDto = orderService.getOrderForUser(orderId, userId, userRole);
         return ResponseEntity.ok(orderResponseDto);
     }
 
     @GetMapping("/owner/{orderId}")
-    public ResponseEntity<OrderResponseDto> getOrderByOwner(@PathVariable Long orderId, @RequestParam Long ownerId, @RequestAttribute("userRole") UserRole userRole) {
+    public ResponseEntity<OrderResponseDto> getOrderByOwner(
+            @PathVariable Long orderId,
+            @RequestAttribute("userId") Long ownerId,
+            @RequestAttribute("role") UserRole userRole) {
         OrderResponseDto orderResponseDto = orderService.getOrderByOwner(orderId, ownerId, userRole);
         return ResponseEntity.ok(orderResponseDto);
     }
-
 }

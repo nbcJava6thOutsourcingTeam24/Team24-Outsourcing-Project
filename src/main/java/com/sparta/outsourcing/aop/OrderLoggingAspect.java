@@ -29,7 +29,7 @@ public class OrderLoggingAspect {
     private static final String SECRET_KEY = System.getenv("SPRING_DATASOURCE_JWT"); // JWT 시크릿 키
     private static final int MAX_STACK_TRACE_LINES = 5; // 출력할 스택 트레이스 최대 라인 수 제어
 
-    @Around("execution(* com.sparta.outsourcing.domain.order.service.OrderService.*(..))")
+    @Around("execution(* com.sparta.outsourcing.domain.order.service.service.OrderService.*(..))")
     public Object logExecutionWithToken(ProceedingJoinPoint joinPoint) throws Throwable {
         LocalDateTime startTime = LocalDateTime.now();
         String methodName = joinPoint.getSignature().toShortString();
@@ -64,7 +64,7 @@ public class OrderLoggingAspect {
     }
 
     // 주문 생성 후 주문 ID 로그
-    @AfterReturning(pointcut = "execution(* com.sparta.outsourcing.domain.order.service.OrderService.createOrder(..))", returning = "result")
+    @AfterReturning(pointcut = "execution(* com.sparta.outsourcing.domain.order.service.service.OrderService.createOrder(..))", returning = "result")
     public void logAfterOrderCreation(JoinPoint joinPoint, Object result) {
         OrderResponseDto orderResponse = (OrderResponseDto) result;
         OrderRequestDto orderRequest = (OrderRequestDto) joinPoint.getArgs()[0];
@@ -78,7 +78,7 @@ public class OrderLoggingAspect {
     }
 
     // 주문 상태 변경 후 로그
-    @AfterReturning(pointcut = "execution(* com.sparta.outsourcing.domain.order.service.OrderService.updateOrderStatus(..))", returning = "result")
+    @AfterReturning(pointcut = "execution(* com.sparta.outsourcing.domain.order.service.service.OrderService.updateOrderStatus(..))", returning = "result")
     public void logAfterOrderStatusUpdate(JoinPoint joinPoint, Object result) {
         OrderResponseDto orderResponse = (OrderResponseDto) result;
         Long orderId = (Long) joinPoint.getArgs()[0];
@@ -92,7 +92,7 @@ public class OrderLoggingAspect {
     }
 
     // 주문 조회 후 로그
-    @AfterReturning(pointcut = "execution(* com.sparta.outsourcing.domain.order.service.OrderService.getOrderForUser(..)) || execution(* com.sparta.outsourcing.domain.order.service.OrderService.getOrderByOwner(..))", returning = "result")
+    @AfterReturning(pointcut = "execution(* com.sparta.outsourcing.domain.order.service.service.OrderService.getOrderForUser(..)) || execution(* com.sparta.outsourcing.domain.order.service.service.OrderService.getOrderByOwner(..))", returning = "result")
     public void logAfterOrderRetrieval(JoinPoint joinPoint, Object result) {
         Long orderId = (Long) joinPoint.getArgs()[0]; // 첫 번째 인자로 주문 ID 추출
 

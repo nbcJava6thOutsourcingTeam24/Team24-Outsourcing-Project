@@ -1,6 +1,7 @@
 package com.sparta.outsourcing.domain.review.service;
 
 import com.sparta.outsourcing.domain.order.entity.Orders;
+import com.sparta.outsourcing.domain.order.enums.OrderStatus;
 import com.sparta.outsourcing.domain.order.repository.OrderRepository;
 import com.sparta.outsourcing.domain.review.dto.ReviewRequestDTO;
 import com.sparta.outsourcing.domain.review.dto.ReviewResponseDTO;
@@ -42,14 +43,14 @@ public class ReviewService {
             throw new ApplicationException(ErrorCode.INVALID_USER_FOR_ORDER);
         }
 
-        // 주문이 완료되지 않은 경우 리뷰 작성 불가
-        if (!order.getStatus().equals("COMPLETED")) {
-            throw new ApplicationException(ErrorCode.ORDER_NOT_COMPLETED);
-        }
-
         // 이미 리뷰가 작성된 경우 예외 처리
         if (reviewRepository.existsByOrderId(reviewRequestDTO.getOrderId())) {
             throw new ApplicationException(ErrorCode.REVIEW_ALREADY_EXISTS);
+        }
+
+        // 주문이 완료되지 않은 경우 리뷰 작성 불가
+        if (!order.getStatus().equals(OrderStatus.ORDER_DELIVERED)) {
+            throw new ApplicationException(ErrorCode.ORDER_NOT_COMPLETED);
         }
 
         // 리뷰 생성

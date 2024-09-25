@@ -18,7 +18,6 @@ import com.sparta.outsourcing.domain.user.enums.UserRole;
 import com.sparta.outsourcing.domain.user.repository.UserRepository;
 import com.sparta.outsourcing.exception.ApplicationException;
 import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;

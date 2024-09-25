@@ -1,12 +1,12 @@
 @BASE_URL=http://localhost:8080
 
-@USER_TOKEN=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwicm9sZSI6IlVTRVIiLCJleHAiOjE3Mjc2MzU0ODcsImlhdCI6MTcyNzAzMDY4N30.AYxMEDNiZXV_IMc52QhNfushI0X0oiV0La2B5gbkbj4
+@USER_TOKEN=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwicm9sZSI6IlVTRVIiLCJleHAiOjE3Mjc3OTk2ODMsImlhdCI6MTcyNzE5NDg4M30.CCjsqid3SpWne-lkdYayjeGF_iKyDZw9gNwRRcr2AU4
 
-@OWNER_TOKEN=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyIiwicm9sZSI6Ik9XTkVSIiwiZXhwIjoxNzI3NjM1NTAyLCJpYXQiOjE3MjcwMzA3MDJ9.qHFmaKZiMz85ZKhY3mZbivWz62PlW7G5HmQjbC-qVBU
+@OWNER_TOKEN=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyIiwicm9sZSI6Ik9XTkVSIiwiZXhwIjoxNzI3Nzk5ODk4LCJpYXQiOjE3MjcxOTUwOTh9.VA1NiryatXJR4IpAc6BfM6NeVCSs0J8NSKNb30B3w7o
 
-@EXPIRED_AUTH_TOKEN=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwicm9sZSI6IlVTRVIiLCJleHAiOjE3MjY5NjgyNjMsImlhdCI6MTcyNjk2NDY2M30.gIojYj5sXfrJwqyteVWIAF07G1YnqMZZj8jo1ceASpI
+@EXPIRED_AUTH_TOKEN=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwicm9sZSI6IlVTRVIiLCJleHAiOjE3MjcxOTU0MTIsImlhdCI6MTcyNzE5NTQxMn0.4dvKkWAKdvzW6eBcuJ12wd_Ro69aSXyfGHH94yv6YCk
 
-### 로그 레벨 변경 - INFO , DEBUG , ERROR , WARN , TRACE
+### 동적 로그 레벨 변경 - INFO , DEBUG , ERROR , WARN , TRACE
 POST {{BASE_URL}}/log-level/set?level=INFO
 Content-Type: application/json
 Authorization: Bearer {{USER_TOKEN}}
@@ -22,7 +22,7 @@ POST {{BASE_URL}}/api/signup
 Content-Type: application/json
 
 {
-  "email" : "test2@mail.com",
+  "email" : "test1@mail.com",
   "password" : "abc1234!",
   "userRole" : "USER"
 }
@@ -32,7 +32,7 @@ POST {{BASE_URL}}/api/signup
 Content-Type: application/json
 
 {
-  "email" : "test3@mail.com",
+  "email" : "test2@mail.com",
   "password" : "abc1234!",
   "userRole" : "OWNER"
 }
@@ -48,7 +48,7 @@ POST {{BASE_URL}}/api/signin
 Content-Type: application/json
 
 {
-  "email" : "test2@mail.com",
+  "email" : "test1@mail.com",
   "password" : "abc1234!"
 }
 
@@ -57,7 +57,7 @@ POST {{BASE_URL}}/api/signin
 Content-Type: application/json
 
 {
-  "email" : "test3@mail.com",
+  "email" : "test2@mail.com",
   "password" : "abc1234!"
 }
 
@@ -70,37 +70,86 @@ Authorization: Bearer {{USER_TOKEN}}
   "password" : "abc1234!"
 }
 
-### 가게 생성
+### 가게 등록
 POST {{BASE_URL}}/api/stores
-Content-Type: application/json
 Authorization: Bearer {{OWNER_TOKEN}}
+Content-Type: application/json
 
 {
-  "name": "홍길동 식당",
-  "openTime": "09:00",
-  "closeTime": "21:00",
-  "minPrice": 10000
+  "name": "중화반점",
+  "openTime": "8:00",
+  "closeTime": "18:00",
+  "minPrice": "100000",
+  "notice": "가게공지입니다"
 }
 
 > {%
-    client.test("Status code is 201", function() {
-        client.assert(response.status === 201);
+    client.test("Status code is 200", function() {
+        client.assert(response.status === 200);
     });
 %}
 
-### 메뉴 생성
+### 가게 목록 조회
+GET {{BASE_URL}}/api/stores?name=중화반점
+Authorization: Bearer {{USER_TOKEN}}
+
+> {%
+    client.test("Status code is 200", function() {
+        client.assert(response.status === 200);
+    });
+%}
+
+### 가게 단건 조회
+GET {{BASE_URL}}/api/stores/1
+Authorization: Bearer {{USER_TOKEN}}
+
+> {%
+    client.test("Status code is 200", function() {
+        client.assert(response.status === 200);
+    });
+%}
+
+### 메뉴 등록
 POST {{BASE_URL}}/api/1/menus
-Content-Type: application/json
 Authorization: Bearer {{OWNER_TOKEN}}
+Content-Type: application/json
 
 {
-  "menuname": "꿀맛 삼겹살",
-  "price": 15000
+  "menuname": "짜장면",
+  "price": 7000
 }
 
 > {%
-    client.test("Status code is 201", function() {
-        client.assert(response.status === 201);
+    client.test("Status code is 200", function() {
+        client.assert(response.status === 200);
+    });
+%}
+
+### 리뷰 생성
+POST {{BASE_URL}}/api/reviews
+Content-Type: application/json
+Authorization: Bearer {{USER_TOKEN}}
+
+{
+  "orderId": 1,
+  "rating": 5,
+  "content": "리뷰 내용 예시"
+}
+
+> {%
+    client.test("Status code is 200", function() {
+        client.assert(response.status === 200);
+    });
+%}
+
+### 리뷰 조회
+GET {{BASE_URL}}/api/reviews/store/1/reviews?ratingMin=1&ratingMax=5
+Content-Type: application/json
+Authorization: Bearer {{USER_TOKEN}}
+
+> {%
+    client.test("Status code is 200", function() {
+        client.assert(response.status === 200);
     });
 %}
 
@@ -499,6 +548,4 @@ Authorization: Bearer {{USER_TOKEN}}
         client.assert(response.status === 404);
     });
 %}
-
-
 
