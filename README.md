@@ -10,8 +10,6 @@
 
 ## 팀원 구성
 
-<div align="center">
-
 
 | **강은총**                                       | **이유진**                                        | **이정현**                              | **조준호**                                | **한강**                                    |
 | ------------------------------------------------ | :------------------------------------------------ | :-------------------------------------- | :---------------------------------------- | :------------------------------------------ |
@@ -26,7 +24,8 @@
 - 협업 툴 : ![Slack](https://img.shields.io/badge/Slack-4A154B?style=for-the-badge&logo=slack&logoColor=white) ![Notion](https://img.shields.io/badge/Notion-%23000000.svg?style=for-the-badge&logo=notion&logoColor=white)
 - 디자인 : ![Figma](https://img.shields.io/badge/figma-%23F24E1E.svg?style=for-the-badge&logo=figma&logoColor=white)
 - [커밋 컨벤션](https://www.notion.so/teamsparta/Github-Rules-cd0d76a9b1614cdc8a5fea2210cd8b3a)
-  <br>
+ 
+<br>
 
 ## 2. 브랜치 전략
 
@@ -259,7 +258,7 @@
 
 ## 6. ERD
 
-![image-20240924195911792](C:\Users\db904\AppData\Roaming\Typora\typora-user-images\image-20240924195911792.png)
+
 
 
 
