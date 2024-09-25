@@ -63,4 +63,5 @@ public class Store extends Timestamped {
     public void enableAdvertisement() {
         this.isAdvertised = true;
     }
+
 }

@@ -1,0 +1,71 @@
+@BASE_URL=http://localhost:8080
+
+@USER_TOKEN=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwicm9sZSI6IlVTRVIiLCJleHAiOjE3Mjc3OTk2ODMsImlhdCI6MTcyNzE5NDg4M30.CCjsqid3SpWne-lkdYayjeGF_iKyDZw9gNwRRcr2AU4
+
+@OWNER_TOKEN=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyIiwicm9sZSI6Ik9XTkVSIiwiZXhwIjoxNzI3Nzk5ODk4LCJpYXQiOjE3MjcxOTUwOTh9.VA1NiryatXJR4IpAc6BfM6NeVCSs0J8NSKNb30B3w7o
+
+@EXPIRED_AUTH_TOKEN=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwicm9sZSI6IlVTRVIiLCJleHAiOjE3MjcxOTU0MTIsImlhdCI6MTcyNzE5NTQxMn0.4dvKkWAKdvzW6eBcuJ12wd_Ro69aSXyfGHH94yv6YCk
+
+### 동적 로그 레벨 변경 - INFO , DEBUG , ERROR , WARN , TRACE
+POST {{BASE_URL}}/log-level/set?level=INFO
+Content-Type: application/json
+Authorization: Bearer {{USER_TOKEN}}
+
+> {%
+    client.test("Status code is 200", function() {
+        client.assert(response.status === 200);
+    });
+%}
+
+### 회원가입 - 고객
+POST {{BASE_URL}}/api/signup
+Content-Type: application/json
+
+{
+  "email" : "test1@mail.com",
+  "password" : "abc1234!",
+  "userRole" : "USER"
+}
+
+### 회원가입 - 사장님
+POST {{BASE_URL}}/api/signup
+Content-Type: application/json
+
+{
+  "email" : "test2@mail.com",
+  "password" : "abc1234!",
+  "userRole" : "OWNER"
+}
+
+> {%
+    client.test("Status code is 200", function() {
+        client.assert(response.status === 200);
+    });
+%}
+
+### 회원 로그인 - 고객
+POST {{BASE_URL}}/api/signin
+Content-Type: application/json
+
+{
+  "email" : "test1@mail.com",
+  "password" : "abc1234!"
+}
+
+### 회원 로그인 - 사장님
+POST {{BASE_URL}}/api/signin
+Content-Type: application/json
+
+{
+  "email" : "test2@mail.com",
+  "password" : "abc1234!"
+}
+
+### 회원 탈퇴
+DELETE {{BASE_URL}}/api/users
+Content-Type: application/json
+Authorization: Bearer {{USER_TOKEN}}
+
+{
+  "password" : "abc1234!"
+}

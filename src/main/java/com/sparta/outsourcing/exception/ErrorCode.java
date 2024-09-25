@@ -9,16 +9,15 @@ public enum ErrorCode {
     BAD_REQUEST(HttpStatus.BAD_REQUEST, "잘못된 요청입니다."),
     INVALID_STORE_SIZE(HttpStatus.BAD_REQUEST, "가게는 최대 3개만 등록 가능합니다."),
 
-    TOKEN_INVALID(HttpStatus.UNAUTHORIZED, "토큰이 유효하지 않습니다."),
-
-    USER_FORBIDDEN(HttpStatus.FORBIDDEN, "계정의 권한이 없습니다."),
-
-    PASSWORD_NOT_MATCH(HttpStatus.FORBIDDEN, "비밀번호가 일치하지 않습니다."),
-    USER_NOT_FOUND(HttpStatus.NOT_FOUND, "고객이 존재하지 않습니다."),
-    STORE_NOT_FOUND(HttpStatus.NOT_FOUND, "가게가 존재하지 않습니다."),
-
+    TOKEN_INVALID(HttpStatus.UNAUTHORIZED, "유효하지 않은 토큰입니다."),
+    TOKEN_EXPIRED(HttpStatus.UNAUTHORIZED, "만료된 토큰입니다."),
+    INVALID_LOGIN_INPUT(HttpStatus.UNAUTHORIZED, "이메일 혹은 비밀번호가 일치하지 않습니다."),
     ALREADY_USER_EXIST(HttpStatus.CONFLICT, "이미 존재하는 회원입니다."),
     PASSWORD_SAME_OLD(HttpStatus.CONFLICT, "기존 비밀번호와 동일합니다."),
+    USER_FORBIDDEN(HttpStatus.FORBIDDEN, "계정의 권한이 없습니다."),
+
+    USER_NOT_FOUND(HttpStatus.NOT_FOUND, "고객이 존재하지 않습니다."),
+    STORE_NOT_FOUND(HttpStatus.NOT_FOUND, "가게가 존재하지 않습니다."),
 
     MENU_NOT_FOUND(HttpStatus.NOT_FOUND, "메뉴가 존재하지 않습니다."),
     ORDER_NOT_FOUND(HttpStatus.NOT_FOUND, "주문이 존재하지 않습니다."),
@@ -42,9 +41,6 @@ public enum ErrorCode {
     ORDER_NOT_COMPLETED(HttpStatus.BAD_REQUEST, "배달 완료된 주문에만 리뷰를 작성할 수 있습니다."),
     INVALID_REVIEW_ACCESS(HttpStatus.FORBIDDEN, "리뷰에 접근할 권한이 없습니다."),
     REVIEW_NOT_FOUND(HttpStatus.NOT_FOUND, "리뷰가 존재하지 않습니다.");
-
-
-
 
     private final HttpStatus httpStatus;
     private final String message;

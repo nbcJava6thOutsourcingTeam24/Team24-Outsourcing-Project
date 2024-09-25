@@ -26,12 +26,6 @@ public class GlobalExceptionHandler {
 
         ErrorResponse errorResponse = ErrorResponse.of(status, message);
 
-        // 필드 에러 출력 및 에러 응답에 추가
-        e.getBindingResult().getFieldErrors().forEach(fieldError -> {
-            log.error("유효성 검증 실패 - 필드: {}, 오류: {}", fieldError.getField(), fieldError.getDefaultMessage());
-            errorResponse.addValidation(fieldError.getField(), fieldError.getDefaultMessage());
-        });
-
         return errorResponse;
     }
 
@@ -43,24 +37,6 @@ public class GlobalExceptionHandler {
         HttpStatus status = HttpStatus.CONFLICT;
         String message = "데이터베이스 무결성 위반: 중복된 값 또는 외래 키 제약을 위반했습니다.";
         ErrorResponse errorResponse = ErrorResponse.of(status, message);
-        return ResponseEntity.status(status).body(errorResponse);
-    }
-
-
-    // 400 Bad Request - 제약 조건 위반 ( 제약 조건 위반이라는게 모호한 같아 추가로 설명하면 예시)필드 값 검증 실패)
-    @ExceptionHandler(ConstraintViolationException.class)
-    public ResponseEntity<ErrorResponse> handleConstraintViolationException(final ConstraintViolationException e) {
-        log.error("제약 조건 위반 - {}", e.getMessage());
-
-        HttpStatus status = HttpStatus.BAD_REQUEST;
-        String message = "입력된 값이 제약 조건을 위반했습니다. 데이터를 확인해주세요.";
-        ErrorResponse errorResponse = ErrorResponse.of(status, message);
-
-        // 구체적인 제약 조건 위반 메시지 추가
-        for (ConstraintViolation<?> violation : e.getConstraintViolations()) {
-            errorResponse.addValidation(violation.getPropertyPath().toString(), violation.getMessage());
-        }
-
         return ResponseEntity.status(status).body(errorResponse);
     }
 
