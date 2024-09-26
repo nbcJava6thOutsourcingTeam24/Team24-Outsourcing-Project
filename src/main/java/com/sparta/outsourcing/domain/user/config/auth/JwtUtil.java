@@ -1,7 +1,7 @@
 package com.sparta.outsourcing.domain.user.config.auth;
 
-import com.sparta.outsourcing.domain.user.config.error.AuthErrorCode;
 import com.sparta.outsourcing.domain.user.enums.UserRole;
+import com.sparta.outsourcing.exception.ErrorCode;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -54,8 +54,8 @@ public class JwtUtil {
         if (StringUtils.hasText(tokenValue) && tokenValue.startsWith(BEARER_PREFIX)) {
             return tokenValue.substring(7);
         }
-        log.error(AuthErrorCode.NOT_FOUND_TOKEN.getMessage());
-        throw new NullPointerException(AuthErrorCode.NOT_FOUND_TOKEN.getMessage());
+        log.error(ErrorCode.NOT_FOUND_TOKEN.getMessage());
+        throw new NullPointerException(ErrorCode.NOT_FOUND_TOKEN.getMessage());
     }
 
     public Claims extractClaims(String token) {
