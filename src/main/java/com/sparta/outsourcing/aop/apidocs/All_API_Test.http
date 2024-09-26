@@ -341,7 +341,7 @@ Authorization: Bearer {{USER_TOKEN}}
   "storeId": 1,
   "customerId": 999,
   "menuId": 1,
-  "totalPrice": 15000,
+  "minOrderPrice": 15000,
   "status": "ORDER_PLACED"
 }
 
