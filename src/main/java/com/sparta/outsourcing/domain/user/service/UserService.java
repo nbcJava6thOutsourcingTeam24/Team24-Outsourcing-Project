@@ -1,5 +1,7 @@
 package com.sparta.outsourcing.domain.user.service;
 
+import com.sparta.outsourcing.domain.menu.repository.MenuRepository;
+import com.sparta.outsourcing.domain.store.repository.StoreRepository;
 import com.sparta.outsourcing.domain.user.config.auth.JwtUtil;
 import com.sparta.outsourcing.domain.user.config.password.PasswordEncoder;
 import com.sparta.outsourcing.domain.user.entity.User;
@@ -16,6 +18,8 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final StoreRepository storeRepository;
+    private final MenuRepository menuRepository;
     private final JwtUtil jwtUtil;
 
     @Transactional
@@ -54,6 +58,11 @@ public class UserService {
         }
         if(!passwordEncoder.matches(password, user.getPassword())){
             throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+        }
+        if(user.getUserRole().equals(UserRole.OWNER))
+        {
+            storeRepository.deleteStoreById(user.getId());
+            menuRepository.deleteMenusByUserId(user.getId());
         }
 
         user.deleted();

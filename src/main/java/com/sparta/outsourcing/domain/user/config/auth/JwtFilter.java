@@ -1,6 +1,6 @@
 package com.sparta.outsourcing.domain.user.config.auth;
 
-import com.sparta.outsourcing.domain.user.config.error.AuthErrorCode;
+import com.sparta.outsourcing.exception.ErrorCode;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
@@ -56,28 +56,28 @@ public class JwtFilter implements Filter {
 
             chain.doFilter(request, response);
         } catch (SecurityException | MalformedJwtException e) {
-            log.error(AuthErrorCode.INVALID_SIGNATURE.getMessage(), e);
+            log.error(ErrorCode.INVALID_SIGNATURE.getMessage(), e);
             httpResponse.sendError(
                     HttpServletResponse.SC_UNAUTHORIZED,
-                    AuthErrorCode.INVALID_SIGNATURE.getMessage());
+                    ErrorCode.INVALID_SIGNATURE.getMessage());
         } catch (ExpiredJwtException e) {
-            log.error(AuthErrorCode.EXPIRED_TOKEN.getMessage(), e);
+            log.error(ErrorCode.EXPIRED_TOKEN.getMessage(), e);
             httpResponse.sendError(
-                    HttpServletResponse.SC_UNAUTHORIZED, AuthErrorCode.EXPIRED_TOKEN.getMessage());
+                    HttpServletResponse.SC_UNAUTHORIZED, ErrorCode.EXPIRED_TOKEN.getMessage());
         } catch (UnsupportedJwtException e) {
-            log.error(AuthErrorCode.UNSUPPORTED_TOKEN.getMessage(), e);
+            log.error(ErrorCode.UNSUPPORTED_TOKEN.getMessage(), e);
             httpResponse.sendError(
                     HttpServletResponse.SC_BAD_REQUEST,
-                    AuthErrorCode.UNSUPPORTED_TOKEN.getMessage());
+                    ErrorCode.UNSUPPORTED_TOKEN.getMessage());
         } catch (IllegalArgumentException e) {
-            log.error(AuthErrorCode.EMPTY_CLAIMS.getMessage(), e);
+            log.error(ErrorCode.EMPTY_CLAIMS.getMessage(), e);
             httpResponse.sendError(
-                    HttpServletResponse.SC_BAD_REQUEST, AuthErrorCode.EMPTY_CLAIMS.getMessage());
+                    HttpServletResponse.SC_BAD_REQUEST, ErrorCode.EMPTY_CLAIMS.getMessage());
         } catch (Exception e) {
-            log.error(AuthErrorCode.TOKEN_VERIFICATION_ERROR.getMessage(), e);
+            log.error(ErrorCode.TOKEN_VERIFICATION_ERROR.getMessage(), e);
             httpResponse.sendError(
                     HttpServletResponse.SC_UNAUTHORIZED,
-                    AuthErrorCode.TOKEN_VERIFICATION_ERROR.getMessage());
+                    ErrorCode.TOKEN_VERIFICATION_ERROR.getMessage());
         }
     }
 
