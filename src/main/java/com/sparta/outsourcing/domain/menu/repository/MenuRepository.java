@@ -22,8 +22,4 @@ public interface MenuRepository extends JpaRepository<Menu, Long> {
     @Query("UPDATE Menu m SET m.deleted = true WHERE m.store.id = :storeId")
     void updateMenu(@Param("storeId") Long storeId);
 
-    @Modifying
-    @Query("UPDATE Menu m SET m.deleted = true WHERE m.store.id IN (SELECT s.id FROM Store s WHERE s.owner.id = :userId)")
-    void deleteMenusByUserId(Long userId);
-
 }
