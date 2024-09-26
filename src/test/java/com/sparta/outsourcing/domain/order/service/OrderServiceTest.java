@@ -31,6 +31,15 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+
+/* LocalTime mockTime = LocalTime.of(21, 0);
+  try (MockedStatic<LocalTime> mockedLocalTime = mockStatic(LocalTime.class)) {
+  mockedLocalTime.when(LocalTime::now).thenReturn(mockTime);
+  LocalTime.now() 메서드를 목(mock)으로 만들어 특정 시간을 반환하도록 설정하여,
+  테스트시 실제 현재 시간이 아닌 21시로 고정하여 테스트를 진행였습니다. */
+
+
+
 class OrderServiceTest {
 
     @InjectMocks
