@@ -39,6 +39,11 @@ public class MenuService {
         Store store = storeRepository.findById(storeId)
                 .orElseThrow(()-> new ApplicationException(ErrorCode.STORE_NOT_FOUND));
 
+        // 가게 상태 확인 - 폐업된 가게는 메뉴 수정 불가
+        if (store.isStatus()) {
+            throw new ApplicationException(ErrorCode.STORE_NOT_FOUND);
+        }
+
         if(!currentUser.equals(store.getOwner())){
             throw new ApplicationException(ErrorCode.USER_FORBIDDEN);
         }
@@ -63,6 +68,11 @@ public class MenuService {
         Store store = storeRepository.findById(storeId)
                 .orElseThrow(()-> new ApplicationException(ErrorCode.STORE_NOT_FOUND));
 
+        // 가게 상태 확인 - 폐업된 가게는 메뉴 수정 불가
+        if (store.isStatus()) {
+            throw new ApplicationException(ErrorCode.STORE_NOT_FOUND);
+        }
+
         if(!currentUser.equals(store.getOwner())){
             throw new ApplicationException(ErrorCode.USER_FORBIDDEN);
         }
@@ -70,6 +80,11 @@ public class MenuService {
         // 메뉴 조회
         Menu menu = menuRepository.findByIdAndStoreId(menuId, store.getId())
                 .orElseThrow(()-> new ApplicationException(ErrorCode.MENU_NOT_FOUND));
+
+        // 삭제 여부 확인
+        if(menu.getDeleted()){
+            throw new ApplicationException(ErrorCode.MENU_NOT_FOUND);
+        }
 
         // 메뉴 수정
         menu.updateMenu(updateMenuRequestDto);
@@ -91,6 +106,12 @@ public class MenuService {
         Store store = storeRepository.findById(storeId)
                 .orElseThrow(()-> new ApplicationException(ErrorCode.STORE_NOT_FOUND));
 
+        // 가게 상태 확인 - 폐업된 가게는 메뉴 수정 불가
+        if (store.isStatus()) {
+            throw new ApplicationException(ErrorCode.STORE_NOT_FOUND);
+        }
+
+        // 삭제 여부 확인 - 삭제된 메뉴는 수정 불가
         if(!currentUser.equals(store.getOwner())){
             throw new ApplicationException(ErrorCode.USER_FORBIDDEN);
         }
@@ -106,6 +127,5 @@ public class MenuService {
 
         // 메뉴 삭제
         menu.deleteMenu();
-
     }
 }
