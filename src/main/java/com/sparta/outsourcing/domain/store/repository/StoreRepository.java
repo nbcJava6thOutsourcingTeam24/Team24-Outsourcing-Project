@@ -4,6 +4,7 @@ import com.sparta.outsourcing.domain.store.entity.Store;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
 public interface StoreRepository extends JpaRepository<Store, Long> {
@@ -12,4 +13,8 @@ public interface StoreRepository extends JpaRepository<Store, Long> {
 
     @Query("SELECT s From Store s Where s.name = :storeName AND s.status = false ORDER BY s.isAdvertised DESC")
     List<Store> findStoreByName(String storeName);
+
+    @Modifying
+    @Query("UPDATE Store m SET m.status = true WHERE m.owner.id = :storeId")
+    void deleteStoreById(Long storeId);
 }

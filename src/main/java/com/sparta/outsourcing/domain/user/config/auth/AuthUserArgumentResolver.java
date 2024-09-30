@@ -1,7 +1,7 @@
 package com.sparta.outsourcing.domain.user.config.auth;
 
 import com.sparta.outsourcing.domain.user.config.annotation.Auth;
-import com.sparta.outsourcing.domain.user.config.error.AuthErrorCode;
+import com.sparta.outsourcing.exception.ErrorCode;
 import com.sparta.outsourcing.domain.user.dto.AuthUser;
 import com.sparta.outsourcing.domain.user.enums.UserRole;
 import jakarta.servlet.http.HttpServletRequest;
@@ -23,7 +23,7 @@ public class AuthUserArgumentResolver implements HandlerMethodArgumentResolver {
 
         // @Auth 어노테이션과 AuthUser 타입이 함께 사용되지 않은 경우 예외 발생
         if (!Objects.equals(hasAuthAnnotation, isAuthUserType)) {
-            throw new IllegalArgumentException(AuthErrorCode.AUTH_TYPE_ERROR.getMessage());
+            throw new IllegalArgumentException("@Auth와 AuthUser 타입은 함께 사용되어야 합니다.");
         }
 
         return hasAuthAnnotation;
